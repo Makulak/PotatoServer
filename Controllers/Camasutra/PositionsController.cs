@@ -61,15 +61,15 @@ namespace PotatoServer.Controllers.Camasutra
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PositionGetVm>> GetPosition(int categoryId, int id)
+        public async Task<ActionResult<PositionGetVm>> GetPosition(int categoryId, int positionId)
         {
             try
             {
                 var position = await _context.Positions
-                .FirstOrDefaultAsync(position => position.CategoryId == categoryId && position.Id == id);
+                .FirstOrDefaultAsync(position => position.CategoryId == categoryId && position.Id == positionId);
 
                 if (position == null)
-                    throw new NotFoundException(_localizer.GetString("PositionNotFound", id));
+                    throw new NotFoundException(_localizer.GetString("PositionNotFound", positionId));
 
                 return Ok(_mapper.MapToPositionGetVm(position));
             }
@@ -112,13 +112,15 @@ namespace PotatoServer.Controllers.Camasutra
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<PositionGetVm>> DeletePosition(int id)
+        public async Task<ActionResult<PositionGetVm>> DeletePosition(int categoryId, int positionId)
         {
             try
             {
-                var position = await _context.Positions.FindAsync(id);
+                var position = await _context.Positions
+                .FirstOrDefaultAsync(position => position.CategoryId == categoryId && position.Id == positionId);
+
                 if (position == null)
-                    throw new NotFoundException(_localizer.GetString("PositionNotFound", id));
+                    throw new NotFoundException(_localizer.GetString("PositionNotFound", positionId));
 
                 _context.Positions.Remove(position);
                 await _context.SaveChangesAsync();

@@ -60,10 +60,10 @@ namespace PotatoServer
              {
                  cfg.TokenValidationParameters = new TokenValidationParameters()
                  {
-                     ValidateIssuer = false,
-                     ValidateAudience = false,
-                     //ValidIssuer = Configuration["tokens:issuer"],
-                     //ValidAudience = Configuration["tokens:audience"],
+                     //ValidateIssuer = false,
+                     //ValidateAudience = false,
+                     ValidIssuer = Configuration["tokens:issuer"],
+                     ValidAudience = Configuration["tokens:audience"],
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["tokens:key"]))
                  };
              });
