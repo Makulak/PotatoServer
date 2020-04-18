@@ -33,96 +33,67 @@ namespace PotatoServer.Controllers.Camasutra
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryGetVm>>> GetCategories([Minimum(0)] int? skip, [Minimum(0)] int? take)
         {
-            try
-            {
-                var categories = await _context.Categories
-                    .GetPaged(skip, take)
-                    .ToListAsync();
+            var categories = await _context.Categories
+                .GetPaged(skip, take)
+                .ToListAsync();
 
-                return Ok(_mapper.MapToCategoryGetVm(categories));
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(_mapper.MapToCategoryGetVm(categories));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryGetVm>> GetCategory(int id)
         {
-            try
-            {
-                var category = await _context.Categories
-                .FirstOrDefaultAsync(category => category.Id == id);
+            var category = await _context.Categories
+            .FirstOrDefaultAsync(category => category.Id == id);
 
-                if (category == null)
-                    throw new NotFoundException(_localizer.GetString("NotFound_Category", id));
+            if (category == null)
+                throw new NotFoundException(_localizer.GetString("NotFound_Category", id));
 
-                return Ok(_mapper.MapToCategoryGetVm(category));
-            }
-            catch (NotFoundException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(_mapper.MapToCategoryGetVm(category));
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<CategoryGetVm>> PostCategory(CategoryPostVm categoryVm)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    throw new BadRequestException(_localizer.GetString("InvalidObject"));
+            var category = _mapper.MapToCategory(categoryVm);
 
-                var category = _mapper.MapToCategory(categoryVm);
+            _context.Categories.Add(category);
+            await _context.SaveChangesAsync();
 
-                _context.Categories.Add(category);
-                await _context.SaveChangesAsync();
+            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+        }
 
-                return CreatedAtAction("GetCategory", new { id = category.Id }, category);
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCategory(int id, CategoryPutVm categoryVm)
+        {
+            if (id != categoryVm.Id)
+                throw new BadRequestException(_localizer.GetString("BadRequest_IdsDoNotMatch", id));
+
+            var categoryExists = await _context.Categories.AnyAsync(cat => cat.Id == id);
+            if (!categoryExists)
+                throw new NotFoundException(_localizer.GetString("NotFound_Category", id));
+
+            var category = _mapper.MapToCategory(categoryVm);
+
+            _context.Entry(category).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(_mapper.MapToCategoryGetVm(category));
         }
 
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult<CategoryGetVm>> DeleteCategory(int id)
         {
-            try
-            {
-                var category = await _context.Categories.FindAsync(id);
-                if (category == null)
-                    throw new NotFoundException(_localizer.GetString("NotFound_Category", id));
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
+                throw new NotFoundException(_localizer.GetString("NotFound_Category", id));
 
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
 
-                return Ok(_mapper.MapToCategoryGetVm(category));
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(_mapper.MapToCategoryGetVm(category));
         }
     }
 }

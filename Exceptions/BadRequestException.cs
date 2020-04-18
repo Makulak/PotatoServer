@@ -2,8 +2,10 @@
 
 namespace PotatoServer.Exceptions
 {
-    public class BadRequestException : Exception
+    public class BadRequestException : PotatoServerException
     {
+        public override int StatusCode => 401;
+
         public BadRequestException()
         {
         }

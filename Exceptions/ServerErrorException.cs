@@ -2,8 +2,10 @@
 
 namespace PotatoServer.Exceptions
 {
-    public class ServerErrorException : Exception
+    public class ServerErrorException : PotatoServerException
     {
+        public override int StatusCode => 500;
+
         public ServerErrorException()
         {
         }

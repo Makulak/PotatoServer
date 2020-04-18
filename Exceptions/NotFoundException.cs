@@ -2,8 +2,10 @@
 
 namespace PotatoServer.Exceptions
 {
-    public class NotFoundException : Exception
+    public class NotFoundException : PotatoServerException
     {
+        public override int StatusCode => 404;
+
         public NotFoundException()
         {
         }

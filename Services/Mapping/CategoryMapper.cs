@@ -25,6 +25,18 @@ namespace PotatoServer.Services.Mapping
             };
         }
 
+        public Category MapToCategory(CategoryPutVm categoryVm)
+        {
+            if (categoryVm == null)
+                return null;
+
+            return new Category
+            {
+                Id = categoryVm.Id,
+                Name = categoryVm.Name
+            };
+        }
+
         public CategoryGetVm MapToCategoryGetVm(Category category)
         {
             if (category == null)

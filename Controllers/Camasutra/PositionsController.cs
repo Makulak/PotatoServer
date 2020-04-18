@@ -34,30 +34,16 @@ namespace PotatoServer.Controllers.Camasutra
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PositionGetVm>>> GetPositions(int categoryId, [Minimum(0)] int? skip, [Minimum(0)] int? take)
         {
-            try
-            {
-                if (!(await _context.Positions.AnyAsync(category => category.CategoryId == categoryId)))
-                    throw new NotFoundException(_localizer.GetString("NotFound_Category"));
 
-                var positions = await _context.Positions
-                    .Where(position => position.CategoryId == categoryId)
-                    .GetPaged(skip, take)
-                    .ToListAsync();
+            if (!(await _context.Positions.AnyAsync(category => category.CategoryId == categoryId)))
+                throw new NotFoundException(_localizer.GetString("NotFound_Category"));
 
-                return Ok(_mapper.MapToPositionGetVm(positions));
-            }
-            catch (BadRequestException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var positions = await _context.Positions
+                .Where(position => position.CategoryId == categoryId)
+                .GetPaged(skip, take)
+                .ToListAsync();
+
+            return Ok(_mapper.MapToPositionGetVm(positions));
         }
 
         [HttpGet("{id}")]
@@ -73,7 +59,7 @@ namespace PotatoServer.Controllers.Camasutra
 
                 return Ok(_mapper.MapToPositionGetVm(position));
             }
-            catch(NotFoundException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
             }
@@ -87,54 +73,31 @@ namespace PotatoServer.Controllers.Camasutra
         [Authorize]
         public async Task<ActionResult<PositionGetVm>> PostPosition(int categoryId, PositionPostVm positionVm)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    throw new BadRequestException(_localizer.GetString("InvalidObject"));
+            var position = _mapper.MapToPosition(positionVm);
+            position.CategoryId = categoryId;
 
-                var position = _mapper.MapToPosition(positionVm);
-                position.CategoryId = categoryId;
+            _context.Positions.Add(position);
+            await _context.SaveChangesAsync();
 
-                _context.Positions.Add(position);
-                await _context.SaveChangesAsync();
+            return CreatedAtAction("GetPosition", new { categoryId, id = position.Id }, _mapper.MapToPositionGetVm(position));
 
-                return CreatedAtAction("GetPosition", new { categoryId, id = position.Id }, _mapper.MapToPositionGetVm(position));
-            }
-            catch(BadRequestException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
         }
 
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult<PositionGetVm>> DeletePosition(int categoryId, int positionId)
         {
-            try
-            {
-                var position = await _context.Positions
-                .FirstOrDefaultAsync(position => position.CategoryId == categoryId && position.Id == positionId);
+            var position = await _context.Positions
+            .FirstOrDefaultAsync(position => position.CategoryId == categoryId && position.Id == positionId);
 
-                if (position == null)
-                    throw new NotFoundException(_localizer.GetString("NotFound_Position", positionId));
+            if (position == null)
+                throw new NotFoundException(_localizer.GetString("NotFound_Position", positionId));
 
-                _context.Positions.Remove(position);
-                await _context.SaveChangesAsync();
+            _context.Positions.Remove(position);
+            await _context.SaveChangesAsync();
 
-                return Ok(_mapper.MapToPositionGetVm(position));
-            }
-            catch(NotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(_mapper.MapToPositionGetVm(position));
+
         }
     }
 }

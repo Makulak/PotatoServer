@@ -126,14 +126,17 @@
   <data name="Annotation_Required_Description" xml:space="preserve">
     <value>Opis jest wymagany.</value>
   </data>
+  <data name="Annotation_Required_Id" xml:space="preserve">
+    <value>Id jest wymagane.</value>
+  </data>
   <data name="Annotation_Required_Name" xml:space="preserve">
     <value>Nazwa jest wymagana.</value>
   </data>
   <data name="Annotation_ValueMustBeMinimum" xml:space="preserve">
     <value>Wartość dla parametru {0} musi wynosić co najmniej {1}.</value>
   </data>
-  <data name="InvalidObject" xml:space="preserve">
-    <value>Niepoprawny obiekt.</value>
+  <data name="BadRequest_IdsDoNotMatch" xml:space="preserve">
+    <value>Id obiektu i ścieżki nie jest zgodne.</value>
   </data>
   <data name="NotFound_Category" xml:space="preserve">
     <value>Nie znaleziono kategorii o id {0}.</value>

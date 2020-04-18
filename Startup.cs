@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
 using PotatoServer.Exceptions;
-using Microsoft.Extensions.Localization;
+using PotatoServer.Filters;
 
 namespace PotatoServer
 {
@@ -34,7 +34,11 @@ namespace PotatoServer
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-            services.AddMvc()
+            services.AddMvc(config =>
+            {
+                config.Filters.Add(new ValidateModelAttribute());
+                config.Filters.Add(new HandleExceptionAttribute());
+            })
                 .AddDataAnnotationsLocalization(options =>
                 {
                     options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResources));

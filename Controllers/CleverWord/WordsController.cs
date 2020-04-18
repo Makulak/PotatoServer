@@ -21,7 +21,7 @@ namespace PotatoServer.Controllers.CleverWord
         private readonly WordMapper _mapper;
         private readonly IStringLocalizer<SharedResources> _localizer;
 
-        public WordsController(DatabaseContext context, 
+        public WordsController(DatabaseContext context,
             WordMapper mapper,
             IStringLocalizer<SharedResources> localizer)
         {
@@ -33,122 +33,65 @@ namespace PotatoServer.Controllers.CleverWord
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WordGetVm>>> GetWords()
         {
-            try
-            {
-                var words = await _context.Words.ToListAsync();
+            var words = await _context.Words.ToListAsync();
 
-                return Ok(_mapper.MapToWordGetVm(words));
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(_mapper.MapToWordGetVm(words));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<WordGetVm>> GetWord(int id)
         {
-            try
-            {
-                var word = await _context.Words.FindAsync(id);
+            var word = await _context.Words.FindAsync(id);
 
-                if (word == null)
-                    throw new NotFoundException(_localizer.GetString("NotFound_Word", id));
+            if (word == null)
+                throw new NotFoundException(_localizer.GetString("NotFound_Word", id));
 
-                return Ok(_mapper.MapToWordGetVm(word));
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(_mapper.MapToWordGetVm(word));
         }
 
         [HttpGet("random")]
         public async Task<ActionResult<WordGetVm>> GetRandomWord()
         {
-            try
-            {
-                var word = await _context.Words.OrderBy(word => Guid.NewGuid()).FirstAsync();
+            var word = await _context.Words.OrderBy(word => Guid.NewGuid()).FirstAsync();
 
-                return Ok(_mapper.MapToWordGetVm(word));
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(_mapper.MapToWordGetVm(word));
         }
 
         [HttpPost]
         [Authorize]
         public async Task<ActionResult<WordGetVm>> PostWord(WordPostVm wordVm)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    throw new BadRequestException(_localizer.GetString("InvalidObject"));
+            var word = _mapper.MapToWord(wordVm);
 
-                var word = _mapper.MapToWord(wordVm);
+            _context.Words.Add(word);
+            await _context.SaveChangesAsync();
 
-                _context.Words.Add(word);
-                await _context.SaveChangesAsync();
-
-                return CreatedAtAction("GetWord", new { id = word.Id }, word);
-            }
-            catch(BadRequestException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return CreatedAtAction("GetWord", new { id = word.Id }, word);
         }
 
         [HttpPost("add-many")]
         public async Task<ActionResult<List<int>>> PostWords(List<WordPostVm> wordsVm)
         {
-            try
-            {
-                var words = _mapper.MapToWord(wordsVm);
+            var words = _mapper.MapToWord(wordsVm);
 
-                _context.Words.AddRange(words);
-                await _context.SaveChangesAsync();
+            _context.Words.AddRange(words);
+            await _context.SaveChangesAsync();
 
-                return Ok(words.Select(word => word.Id));
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Ok(words.Select(word => word.Id));
         }
 
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<ActionResult<WordGetVm>> DeleteWord(int id)
         {
-            try
-            {
-                var word = await _context.Words.FindAsync(id);
-                if (word == null)
-                    throw new NotFoundException(_localizer.GetString("NotFound_Word", id));
+            var word = await _context.Words.FindAsync(id);
+            if (word == null)
+                throw new NotFoundException(_localizer.GetString("NotFound_Word", id));
 
-                _context.Words.Remove(word);
-                await _context.SaveChangesAsync();
+            _context.Words.Remove(word);
+            await _context.SaveChangesAsync();
 
-                return _mapper.MapToWordGetVm(word);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return _mapper.MapToWordGetVm(word);
         }
     }
 }
