@@ -18,7 +18,7 @@ namespace PotatoServer.Controllers
         }
 
         [HttpGet("server-settings")]
-        public async Task<ActionResult<ServerSettingsGetVm>> GetServerSettings(int id)
+        public async Task<ActionResult<ServerSettingsGetVm>> GetServerSettings()
         {
             try
             {
