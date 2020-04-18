@@ -132,16 +132,16 @@
   <data name="Annotation_ValueMustBeMinimum" xml:space="preserve">
     <value>Wartość dla parametru {0} musi wynosić co najmniej {1}.</value>
   </data>
-  <data name="CategoryNotFound" xml:space="preserve">
-    <value>Nie znaleziono kategorii o id {0}.</value>
-  </data>
   <data name="InvalidObject" xml:space="preserve">
     <value>Niepoprawny obiekt.</value>
   </data>
-  <data name="PositionNotFound" xml:space="preserve">
+  <data name="NotFound_Category" xml:space="preserve">
+    <value>Nie znaleziono kategorii o id {0}.</value>
+  </data>
+  <data name="NotFound_Position" xml:space="preserve">
     <value>Nie znaleziono pozycji o id {0}.</value>
   </data>
-  <data name="WordNotFound" xml:space="preserve">
+  <data name="NotFound_Word" xml:space="preserve">
     <value>Nie znaleziono słowa o id {0}.</value>
   </data>
   <data name="WrongEmailOrPassword" xml:space="preserve">

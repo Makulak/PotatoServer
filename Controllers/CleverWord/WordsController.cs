@@ -53,7 +53,7 @@ namespace PotatoServer.Controllers.CleverWord
                 var word = await _context.Words.FindAsync(id);
 
                 if (word == null)
-                    throw new NotFoundException(_localizer.GetString("WordNotFound", id));
+                    throw new NotFoundException(_localizer.GetString("NotFound_Word", id));
 
                 return Ok(_mapper.MapToWordGetVm(word));
             }
@@ -134,7 +134,7 @@ namespace PotatoServer.Controllers.CleverWord
             {
                 var word = await _context.Words.FindAsync(id);
                 if (word == null)
-                    throw new NotFoundException(_localizer.GetString("WordNotFound", id));
+                    throw new NotFoundException(_localizer.GetString("NotFound_Word", id));
 
                 _context.Words.Remove(word);
                 await _context.SaveChangesAsync();

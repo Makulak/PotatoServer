@@ -12,6 +12,9 @@ using PotatoServer.Services.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System;
+using PotatoServer.Exceptions;
+using Microsoft.Extensions.Localization;
 
 namespace PotatoServer
 {
@@ -40,11 +43,22 @@ namespace PotatoServer
             services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, IdentityRole>(o =>
             {
-                o.Password.RequiredLength = 6;
-                o.Password.RequireDigit = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequireNonAlphanumeric = false;
+                try
+                {
+                    o.Password.RequiredLength = int.Parse(Configuration["Password:RequiredLength"]);
+                    o.Password.RequireDigit = bool.Parse(Configuration["Password:RequireDigit"]);
+                    o.Password.RequireLowercase = bool.Parse(Configuration["Password:RequireLowercase"]);
+                    o.Password.RequireUppercase = bool.Parse(Configuration["Password:RequireUppercase"]);
+                    o.Password.RequireNonAlphanumeric = bool.Parse(Configuration["Password:RequireNonAlphanumeric"]);
+                }
+                catch(ArgumentNullException ex)
+                {
+                    throw new ServerErrorException($"Error during setting password configuration, argument: {ex.ParamName}");
+                }
+                catch(FormatException ex)
+                {
+                    throw new ServerErrorException($"Error during setting password configuration, argument: {ex.Message}");
+                }
 
                 o.User.RequireUniqueEmail = true;
                 o.SignIn.RequireConfirmedEmail = true;
@@ -60,8 +74,6 @@ namespace PotatoServer
              {
                  cfg.TokenValidationParameters = new TokenValidationParameters()
                  {
-                     //ValidateIssuer = false,
-                     //ValidateAudience = false,
                      ValidIssuer = Configuration["tokens:issuer"],
                      ValidAudience = Configuration["tokens:audience"],
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["tokens:key"]))

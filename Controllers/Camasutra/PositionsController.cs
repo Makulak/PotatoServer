@@ -37,7 +37,7 @@ namespace PotatoServer.Controllers.Camasutra
             try
             {
                 if (!(await _context.Positions.AnyAsync(category => category.CategoryId == categoryId)))
-                    throw new NotFoundException(_localizer.GetString("CategoryNotFound"));
+                    throw new NotFoundException(_localizer.GetString("NotFound_Category"));
 
                 var positions = await _context.Positions
                     .Where(position => position.CategoryId == categoryId)
@@ -69,7 +69,7 @@ namespace PotatoServer.Controllers.Camasutra
                 .FirstOrDefaultAsync(position => position.CategoryId == categoryId && position.Id == positionId);
 
                 if (position == null)
-                    throw new NotFoundException(_localizer.GetString("PositionNotFound", positionId));
+                    throw new NotFoundException(_localizer.GetString("NotFound_Position", positionId));
 
                 return Ok(_mapper.MapToPositionGetVm(position));
             }
@@ -120,7 +120,7 @@ namespace PotatoServer.Controllers.Camasutra
                 .FirstOrDefaultAsync(position => position.CategoryId == categoryId && position.Id == positionId);
 
                 if (position == null)
-                    throw new NotFoundException(_localizer.GetString("PositionNotFound", positionId));
+                    throw new NotFoundException(_localizer.GetString("NotFound_Position", positionId));
 
                 _context.Positions.Remove(position);
                 await _context.SaveChangesAsync();

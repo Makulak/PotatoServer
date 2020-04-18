@@ -10,7 +10,6 @@ using PotatoServer.Services.Mapping;
 using PotatoServer.Exceptions;
 using Microsoft.Extensions.Localization;
 using PotatoServer.Helpers;
-using System.ComponentModel.DataAnnotations;
 
 namespace PotatoServer.Controllers.Camasutra
 {
@@ -61,7 +60,7 @@ namespace PotatoServer.Controllers.Camasutra
                 .FirstOrDefaultAsync(category => category.Id == id);
 
                 if (category == null)
-                    throw new NotFoundException(_localizer.GetString("CategoryNotFound", id));
+                    throw new NotFoundException(_localizer.GetString("NotFound_Category", id));
 
                 return Ok(_mapper.MapToCategoryGetVm(category));
             }
@@ -109,7 +108,7 @@ namespace PotatoServer.Controllers.Camasutra
             {
                 var category = await _context.Categories.FindAsync(id);
                 if (category == null)
-                    throw new NotFoundException(_localizer.GetString("CategoryNotFound", id));
+                    throw new NotFoundException(_localizer.GetString("NotFound_Category", id));
 
                 _context.Categories.Remove(category);
                 await _context.SaveChangesAsync();
