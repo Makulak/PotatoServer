@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace PotatoServer.Database.Models
+namespace PotatoServer.Database.Models.Core
 {
     public class User : IdentityUser
     {

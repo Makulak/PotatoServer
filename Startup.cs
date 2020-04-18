@@ -1,5 +1,4 @@
 using PotatoServer.Database;
-using PotatoServer.Database.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +14,7 @@ using System.Text;
 using System;
 using PotatoServer.Exceptions;
 using PotatoServer.Filters;
+using PotatoServer.Database.Models.Core;
 
 namespace PotatoServer
 {

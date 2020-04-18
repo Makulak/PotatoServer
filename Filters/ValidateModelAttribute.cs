@@ -8,9 +8,8 @@ namespace PotatoServer.Filters
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if(!context.ModelState.IsValid)
-            {
                 throw new BadRequestException(context.ModelState.ToString());
-            }
+
             base.OnActionExecuting(context);
         }
     }

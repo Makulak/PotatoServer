@@ -1,5 +1,4 @@
-﻿using PotatoServer.Database.Models;
-using PotatoServer.ViewModels.User;
+﻿using PotatoServer.ViewModels.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +11,8 @@ using System.Threading.Tasks;
 using PotatoServer.Exceptions;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Configuration;
+using PotatoServer.Database.Models.Core;
+using PotatoServer.Filters;
 
 namespace PotatoServer.Controllers
 {
@@ -32,6 +33,7 @@ namespace PotatoServer.Controllers
             _configuration = configuration;
         }
 
+        [LoggedAction]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserLoginVm userVm)
         {

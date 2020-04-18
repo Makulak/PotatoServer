@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using System;
+using PotatoServer.Database.Models.Core;
 
 namespace PotatoServer.Database
 {
@@ -15,6 +16,7 @@ namespace PotatoServer.Database
         public DbSet<Category> Categories { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Word> Words { get; set; }
+        public DbSet<LoggedAction> Logs {get;set;}
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
@@ -32,6 +34,7 @@ namespace PotatoServer.Database
             builder.ApplyConfiguration(new PositionConfiguration());
             builder.ApplyConfiguration(new WordConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new LoggedActionConfiguration());
 
             base.OnModelCreating(builder);
         }

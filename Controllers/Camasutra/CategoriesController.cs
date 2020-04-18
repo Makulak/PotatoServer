@@ -10,6 +10,7 @@ using PotatoServer.Services.Mapping;
 using PotatoServer.Exceptions;
 using Microsoft.Extensions.Localization;
 using PotatoServer.Helpers;
+using PotatoServer.Filters;
 
 namespace PotatoServer.Controllers.Camasutra
 {
@@ -31,6 +32,7 @@ namespace PotatoServer.Controllers.Camasutra
         }
 
         [HttpGet]
+        [LoggedAction]
         public async Task<ActionResult<IEnumerable<CategoryGetVm>>> GetCategories([Minimum(0)] int? skip, [Minimum(0)] int? take)
         {
             var categories = await _context.Categories
@@ -41,6 +43,7 @@ namespace PotatoServer.Controllers.Camasutra
         }
 
         [HttpGet("{id}")]
+        [LoggedAction]
         public async Task<ActionResult<CategoryGetVm>> GetCategory(int id)
         {
             var category = await _context.Categories

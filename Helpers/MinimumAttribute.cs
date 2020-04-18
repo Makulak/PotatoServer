@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 namespace PotatoServer.Helpers
 {
