@@ -22,14 +22,6 @@ namespace PotatoServer.Database
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Word>()
-                .HasIndex(u => u.Name)
-                .IsUnique();
-
-            builder.Entity<Position>()
-                .HasIndex(u => u.Name)
-                .IsUnique();
-
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new PositionConfiguration());
             builder.ApplyConfiguration(new WordConfiguration());

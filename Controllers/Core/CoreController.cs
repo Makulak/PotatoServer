@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using PotatoServer.ViewModels.ServerSettings;
-using System;
+using PotatoServer.ViewModels.ServerSettings.Core;
 using System.Threading.Tasks;
 
-namespace PotatoServer.Controllers
+namespace PotatoServer.Controllers.Core
 {
     [Route("api/core")]
     [ApiController]

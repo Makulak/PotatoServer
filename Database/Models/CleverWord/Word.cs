@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PotatoServer.Database.Models.CleverWord;
+using PotatoServer.Database.Models.Core;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PotatoServer.Database.Models.CleverWord
@@ -10,7 +12,9 @@ namespace PotatoServer.Database.Models.CleverWord
     public class Word : IBaseModel
     {
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Definition { get; set; }
 
 

@@ -1,4 +1,4 @@
-﻿namespace PotatoServer.ViewModels.ServerSettings
+﻿namespace PotatoServer.ViewModels.ServerSettings.Core
 {
     public class ServerSettingsGetVm
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PotatoServer.ViewModels
+namespace PotatoServer.ViewModels.Core
 {
     public class PagedViewModel<T>
     {

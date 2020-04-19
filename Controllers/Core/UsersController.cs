@@ -1,5 +1,4 @@
-﻿using PotatoServer.ViewModels.User;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -13,8 +12,9 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Configuration;
 using PotatoServer.Database.Models.Core;
 using PotatoServer.Filters;
+using PotatoServer.ViewModels.Core.User;
 
-namespace PotatoServer.Controllers
+namespace PotatoServer.Controllers.Core
 {
     [Route("api/auth")]
     [ApiController]
@@ -43,10 +43,11 @@ namespace PotatoServer.Controllers
             {
                 var claims = new[]
                 {
-                        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
-                    };
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.UniqueName, user.Email),
+                    new Claim("UserId", user.Id)
+                };
 
                 var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
 

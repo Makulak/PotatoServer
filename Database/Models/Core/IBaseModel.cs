@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PotatoServer.Database.Models
+namespace PotatoServer.Database.Models.Core
 {
     public interface IBaseModel
     {

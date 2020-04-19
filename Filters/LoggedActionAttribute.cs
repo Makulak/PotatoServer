@@ -1,28 +1,48 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Security.Claims;
 
 namespace PotatoServer.Filters
 {
     public class LoggedActionAttribute : ActionFilterAttribute
     {
+        public bool SaveResponse { get; set; } = true;
+        public bool SaveArguments { get; set; } = true;
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var actionDescriptor =((ControllerActionDescriptor)context.ActionDescriptor);
-            var httpContext = (Microsoft.AspNetCore.Http.DefaultHttpContext)context.HttpContext;
-            var aa = httpContext.Request.Method;
-            var bb = httpContext.Request.Path;
-            var cc = ((System.Security.Claims.ClaimsIdentity)httpContext.User.Identity).Name;
-            var dd = httpContext.Request.Query;
+            var actionDescriptor = ((ControllerActionDescriptor)context.ActionDescriptor);
+            var httpContext = (DefaultHttpContext)context.HttpContext;
+            var identity = (ClaimsIdentity)httpContext.User.Identity;
 
-            var a = context.ActionArguments;
-            var b = actionDescriptor.ActionName;
-            var c = actionDescriptor.ControllerName;
+            var httpMethod = httpContext.Request.Method;
+            var path = httpContext.Request.Path;
+            var userId = identity.Claims.SingleOrDefault(claim => claim.Type == "UserId")?.Value;
+
+            var arguments = SaveArguments ? context.ActionArguments : null;
+            var actionName = actionDescriptor.ActionName;
+            var controllerName = actionDescriptor.ControllerName;
 
             base.OnActionExecuting(context);
         }
-        public override void OnActionExecuted(ActionExecutedContext context)
+
+        public override void OnResultExecuted(ResultExecutedContext context)
         {
-            base.OnActionExecuted(context);
+            if (context.Result is ObjectResult objectResult)
+            {
+                var responseCode = objectResult.StatusCode;
+                var responseValue = SaveResponse ? JsonConvert.SerializeObject(objectResult.Value) : null;
+            }
+            else
+            {
+                throw new NotImplementedException("Error OnResultExecuted, not supported ObjectResult: " + context.Result.ToString());
+            }
+            base.OnResultExecuted(context);
         }
     }
 }

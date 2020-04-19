@@ -6,7 +6,6 @@ namespace PotatoServer.Filters
 {
     public class HandleExceptionAttribute : ActionFilterAttribute
     {
-
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             if(context.Exception is PotatoServerException ex)
@@ -15,6 +14,7 @@ namespace PotatoServer.Filters
                 {
                     StatusCode = ex.StatusCode,
                 };
+                context.ExceptionHandled = true;
             }
             else if (context.Exception != null)
             {
@@ -22,9 +22,8 @@ namespace PotatoServer.Filters
                 {
                     StatusCode = 500
                 };
+                context.ExceptionHandled = true;
             }
-
-            context.ExceptionHandled = true;
 
             base.OnActionExecuted(context);
         }

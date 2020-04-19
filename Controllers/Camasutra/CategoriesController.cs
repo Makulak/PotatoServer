@@ -32,7 +32,7 @@ namespace PotatoServer.Controllers.Camasutra
         }
 
         [HttpGet]
-        [LoggedAction]
+        [LoggedAction(SaveResponse = false)]
         public async Task<ActionResult<IEnumerable<CategoryGetVm>>> GetCategories([Minimum(0)] int? skip, [Minimum(0)] int? take)
         {
             var categories = await _context.Categories
@@ -57,6 +57,7 @@ namespace PotatoServer.Controllers.Camasutra
 
         [HttpPost]
         [Authorize]
+        [LoggedAction]
         public async Task<ActionResult<CategoryGetVm>> PostCategory(CategoryPostVm categoryVm)
         {
             var category = _mapper.MapToCategory(categoryVm);

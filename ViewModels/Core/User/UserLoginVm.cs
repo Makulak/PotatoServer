@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PotatoServer.ViewModels.User
+namespace PotatoServer.ViewModels.Core.User
 {
     public class UserLoginVm
     {
