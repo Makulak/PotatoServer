@@ -9,10 +9,15 @@ using System.Security.Claims;
 
 namespace PotatoServer.Filters
 {
-    public class LoggedActionAttribute : ActionFilterAttribute
+    public class LoggedActionAttribute : ActionFilterAttribute, IOrderedFilter
     {
         public bool SaveResponse { get; set; } = true;
         public bool SaveArguments { get; set; } = true;
+
+        public LoggedActionAttribute()
+        {
+            Order = -10000;
+        }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {

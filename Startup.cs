@@ -36,7 +36,6 @@ namespace PotatoServer
 
             services.AddMvc(config =>
             {
-                config.Filters.Add(new ValidateModelAttribute());
                 config.Filters.Add(new HandleExceptionAttribute());
             })
                 .AddDataAnnotationsLocalization(options =>

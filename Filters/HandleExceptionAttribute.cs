@@ -24,7 +24,6 @@ namespace PotatoServer.Filters
                 };
                 context.ExceptionHandled = true;
             }
-
             base.OnActionExecuted(context);
         }
     }
