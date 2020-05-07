@@ -22,15 +22,15 @@ namespace PotatoServer.Database.Models.CleverWord
         public DateTime? Created { get; set; }
         public DateTime? Changed { get; set; }
     }
-}
 
-public class WordConfiguration : IEntityTypeConfiguration<Word>
-{
-    public void Configure(EntityTypeBuilder<Word> builder)
+    public class WordConfiguration : IEntityTypeConfiguration<Word>
     {
-        builder.HasIndex(u => u.Name)
-               .IsUnique();
+        public void Configure(EntityTypeBuilder<Word> builder)
+        {
+            builder.HasIndex(u => u.Name)
+                   .IsUnique();
 
-        builder.Property(x => x.Created).HasDefaultValueSql("getdate()");
+            builder.Property(x => x.Created).HasDefaultValueSql("getdate()");
+        }
     }
 }

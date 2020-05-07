@@ -1,5 +1,4 @@
-﻿using PotatoServer.Database.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PotatoServer.Database.Models.Camasutra;
 using PotatoServer.Database.Models.CleverWord;
@@ -8,6 +7,7 @@ using System.Threading;
 using System.Linq;
 using System;
 using PotatoServer.Database.Models.Core;
+using PotatoServer.Database.Models.HCC;
 
 namespace PotatoServer.Database
 {
@@ -16,7 +16,8 @@ namespace PotatoServer.Database
         public DbSet<Category> Categories { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Word> Words { get; set; }
-        public DbSet<LoggedAction> Logs {get;set;}
+        public DbSet<LoggedAction> Logs { get; set; }
+        public DbSet<Statistic> Statistics { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
@@ -27,6 +28,7 @@ namespace PotatoServer.Database
             builder.ApplyConfiguration(new WordConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new LoggedActionConfiguration());
+            builder.ApplyConfiguration(new StatisticConfiguration());
 
             base.OnModelCreating(builder);
         }

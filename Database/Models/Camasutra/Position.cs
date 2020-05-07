@@ -26,15 +26,15 @@ namespace PotatoServer.Database.Models.Camasutra
         public DateTime? Created { get; set; }
         public DateTime? Changed { get; set; }
     }
-}
 
-public class PositionConfiguration : IEntityTypeConfiguration<Position>
-{
-    public void Configure(EntityTypeBuilder<Position> builder)
+    public class PositionConfiguration : IEntityTypeConfiguration<Position>
     {
-        builder.HasIndex(u => u.Name)
-               .IsUnique();
+        public void Configure(EntityTypeBuilder<Position> builder)
+        {
+            builder.HasIndex(u => u.Name)
+                   .IsUnique();
 
-        builder.Property(x => x.Created).HasDefaultValueSql("getdate()");
+            builder.Property(x => x.Created).HasDefaultValueSql("getdate()");
+        }
     }
 }
