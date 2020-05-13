@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PotatoServer.Database;
-using System;
 using Microsoft.AspNetCore.Authorization;
 using PotatoServer.ViewModels.Camasutra.Category;
 using PotatoServer.Services.Mapping;
@@ -32,7 +31,7 @@ namespace PotatoServer.Controllers.Camasutra
         }
 
         [HttpGet]
-        [LoggedAction(SaveResponse = false)]
+        [BaseTypeFilter(typeof(LoggedActionAttribute))]
         public async Task<ActionResult<IEnumerable<CategoryGetVm>>> GetCategories([Minimum(0)] int? skip, [Minimum(0)] int? take)
         {
             var categories = await _context.Categories
@@ -43,7 +42,6 @@ namespace PotatoServer.Controllers.Camasutra
         }
 
         [HttpGet("{id}")]
-        [LoggedAction]
         public async Task<ActionResult<CategoryGetVm>> GetCategory(int id)
         {
             var category = await _context.Categories
@@ -57,7 +55,6 @@ namespace PotatoServer.Controllers.Camasutra
 
         [HttpPost]
         [Authorize]
-        [LoggedAction]
         public async Task<ActionResult<CategoryGetVm>> PostCategory(CategoryPostVm categoryVm)
         {
             var category = _mapper.MapToCategory(categoryVm);

@@ -33,7 +33,6 @@ namespace PotatoServer.Controllers.Core
             _configuration = configuration;
         }
 
-        [LoggedAction]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserLoginVm userVm)
         {
