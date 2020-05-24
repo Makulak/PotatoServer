@@ -15,6 +15,8 @@ using System;
 using PotatoServer.Exceptions;
 using PotatoServer.Filters;
 using PotatoServer.Database.Models.Core;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace PotatoServer
 {
@@ -54,11 +56,11 @@ namespace PotatoServer
                     o.Password.RequireUppercase = bool.Parse(Configuration["Password:RequireUppercase"]);
                     o.Password.RequireNonAlphanumeric = bool.Parse(Configuration["Password:RequireNonAlphanumeric"]);
                 }
-                catch(ArgumentNullException ex)
+                catch (ArgumentNullException ex)
                 {
                     throw new ServerErrorException($"Error during setting password configuration, argument: {ex.ParamName}");
                 }
-                catch(FormatException ex)
+                catch (FormatException ex)
                 {
                     throw new ServerErrorException($"Error during setting password configuration, argument: {ex.Message}");
                 }
@@ -82,6 +84,23 @@ namespace PotatoServer
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["tokens:key"]))
                  };
              });
+
+            services.AddHealthChecks()
+                .AddCheck("SQL Database Check", () =>
+                {
+                    using (var conn = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+                    {
+                        try
+                        {
+                            conn.Open();
+                            return HealthCheckResult.Healthy();
+                        }
+                        catch (SqlException)
+                        {
+                            return HealthCheckResult.Unhealthy();
+                        }
+                    }
+                });
 
             services.AddTransient<CategoryMapper>();
             services.AddTransient<PositionMapper>();
@@ -110,6 +129,7 @@ namespace PotatoServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

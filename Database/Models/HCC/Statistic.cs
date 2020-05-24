@@ -12,6 +12,8 @@ namespace PotatoServer.Database.Models.HCC
         public DateTime EndDateTime { get; set; }
         public int NumberOfMistakes { get; set; }
         public string ControlName { get; set; }
+        public int AppearanceRating { get; set; }
+        public int ComfortRating { get; set; }
     }
 
     public class StatisticConfiguration : IEntityTypeConfiguration<Statistic>

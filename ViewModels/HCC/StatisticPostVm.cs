@@ -10,12 +10,18 @@ namespace PotatoServer.ViewModels.HCC
         public string UserId { get; set; }
         [Required]
         public DateTime? StartDateTime { get; set; }
-        [Required]
+        [Required]  
         public DateTime? EndDateTime { get; set; }
         [Required]
         [Minimum(0)]
         public int? NumberOfMistakes { get; set; }
         [Required]
         public string ControlName { get; set; }
+        [Required]
+        [Range(0,5)]
+        public int? AppearanceRating { get; set; }
+        [Required]
+        [Range(0, 5)]
+        public int? ComfortRating { get; set; }
     }
 }

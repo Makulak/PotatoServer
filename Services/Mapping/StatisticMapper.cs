@@ -16,7 +16,9 @@ namespace PotatoServer.Services.Mapping
                 StartDateTime = statisticVm.StartDateTime.Value,
                 EndDateTime = statisticVm.EndDateTime.Value,
                 NumberOfMistakes = statisticVm.NumberOfMistakes.Value,
-                ControlName = statisticVm.ControlName
+                ControlName = statisticVm.ControlName,
+                AppearanceRating = statisticVm.AppearanceRating.Value,
+                ComfortRating = statisticVm.ComfortRating.Value
             };
         }
     }
