@@ -11,6 +11,7 @@ using PotatoServer.Exceptions;
 using Microsoft.Extensions.Localization;
 using System.Linq;
 using PotatoServer.Helpers;
+using Microsoft.AspNetCore.Cors;
 
 namespace PotatoServer.Controllers.Camasutra
 {

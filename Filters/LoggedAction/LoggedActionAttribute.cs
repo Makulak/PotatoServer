@@ -7,23 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace PotatoServer.Filters
+namespace PotatoServer.Filters.LoggedAction
 {
     public class LoggedActionAttribute : ActionFilterAttribute
     {
         public bool SaveResponse { get; set; } = true;
         public bool SaveArguments { get; set; } = true;
 
-
         public LoggedActionAttribute()
         {
-        }
-
-        public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            return base.OnActionExecutionAsync(context, next);
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -64,7 +57,12 @@ namespace PotatoServer.Filters
 
         public virtual string GetObjectResultResponse(ObjectResult objectResult)
         {
-            return JsonConvert.SerializeObject(objectResult.Value);
+            var result = objectResult.Value;
+            var tokenProperty = result.GetType().GetProperty("Token");
+            if(tokenProperty != null)
+                tokenProperty.SetValue(result, "token-value-hidden");
+
+            return JsonConvert.SerializeObject(result);
         }
     }
 }

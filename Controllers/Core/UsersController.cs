@@ -11,8 +11,8 @@ using PotatoServer.Exceptions;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Configuration;
 using PotatoServer.Database.Models.Core;
-using PotatoServer.Filters;
 using PotatoServer.ViewModels.Core.User;
+using PotatoServer.Filters.LoggedAction;
 
 namespace PotatoServer.Controllers.Core
 {
@@ -34,7 +34,8 @@ namespace PotatoServer.Controllers.Core
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody]UserLoginVm userVm)
+        [LoggedActionFilter]
+        public async Task<ActionResult<UserLoginResponseVm>> Login([FromBody]UserLoginVm userVm)
         {
             var user = await _userManager.FindByEmailAsync(userVm.Email);
 
@@ -57,10 +58,10 @@ namespace PotatoServer.Controllers.Core
                     claims: claims,
                     signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256));
 
-                return Ok(new
+                return Ok(new UserLoginResponseVm()
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expires = token.ValidTo
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Expires = token.ValidTo
                 });
             }
             throw new BadRequestException(_localizer.GetString("WrongEmailOrPassword"));

@@ -17,6 +17,7 @@ using PotatoServer.Filters;
 using PotatoServer.Database.Models.Core;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using PotatoServer.Hubs.TicTacToe;
 
 namespace PotatoServer
 {
@@ -31,11 +32,22 @@ namespace PotatoServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder
+                    .WithOrigins("http://localhost:4200")
+                    .AllowCredentials()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             services.AddControllers()
                 .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-            services.AddCors();
             services.AddMvc(config =>
             {
                 config.Filters.Add(new HandleExceptionAttribute());
@@ -101,6 +113,7 @@ namespace PotatoServer
                         }
                     }
                 });
+            services.AddSignalR(x => x.EnableDetailedErrors = true);
 
             services.AddTransient<CategoryMapper>();
             services.AddTransient<PositionMapper>();
@@ -114,14 +127,8 @@ namespace PotatoServer
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
-
+            app.UseCors();
             app.UseRouting();
-
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -130,6 +137,7 @@ namespace PotatoServer
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
+                endpoints.MapHub<TicTacToeHub>("/tic-tac-toe");
             });
         }
     }

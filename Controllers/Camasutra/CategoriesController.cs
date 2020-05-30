@@ -9,7 +9,7 @@ using PotatoServer.Services.Mapping;
 using PotatoServer.Exceptions;
 using Microsoft.Extensions.Localization;
 using PotatoServer.Helpers;
-using PotatoServer.Filters;
+using PotatoServer.Filters.LoggedAction;
 
 namespace PotatoServer.Controllers.Camasutra
 {
@@ -31,7 +31,7 @@ namespace PotatoServer.Controllers.Camasutra
         }
 
         [HttpGet]
-        [BaseTypeFilter(typeof(LoggedActionAttribute))]
+        [LoggedActionFilter]
         public async Task<ActionResult<IEnumerable<CategoryGetVm>>> GetCategories([Minimum(0)] int? skip, [Minimum(0)] int? take)
         {
             var categories = await _context.Categories
