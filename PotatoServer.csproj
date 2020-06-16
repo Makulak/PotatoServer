@@ -23,9 +23,5 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Filters\LoggedAction\NewFolder\" />
-  </ItemGroup>
-
 
 </Project>
