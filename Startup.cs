@@ -118,7 +118,6 @@ namespace PotatoServer
             services.AddTransient<CategoryMapper>();
             services.AddTransient<PositionMapper>();
             services.AddTransient<WordMapper>();
-            services.AddTransient<StatisticMapper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
