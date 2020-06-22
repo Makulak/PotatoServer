@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
 namespace PotatoServer.Hubs.Rooms
 {
+    [Authorize]
     public class RoomsHub : Hub
     {
         private readonly IRoomRepository _roomRepository;

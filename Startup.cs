@@ -19,6 +19,8 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PotatoServer.Hubs.TicTacToe;
 using PotatoServer.Hubs.Rooms;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace PotatoServer
 {
@@ -96,8 +98,23 @@ namespace PotatoServer
                      ValidAudience = Configuration["tokens:audience"],
                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["tokens:key"]))
                  };
-             });
+                 cfg.Events = new JwtBearerEvents()
+                 {
+                     OnMessageReceived = (context) =>
+                     {
+                         var accessToken = context.Request.Query["access_token"];
 
+                         var path = context.HttpContext.Request.Path;
+                         if (!string.IsNullOrEmpty(accessToken) &&
+                             (path.StartsWithSegments("/hub")))
+                         {
+                             context.Token = accessToken;
+                         }
+                         return Task.CompletedTask;
+                     }
+                 };
+             });
+            
             services.AddHealthChecks()
                 .AddCheck("SQL Database Check", () =>
                 {
@@ -120,6 +137,7 @@ namespace PotatoServer
             services.AddTransient<PositionMapper>();
             services.AddTransient<WordMapper>();
             services.AddSingleton<IRoomRepository, RoomsRepository>();
+            services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -139,7 +157,7 @@ namespace PotatoServer
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapHub<TicTacToeHub>("/tic-tac-toe");
-                endpoints.MapHub<RoomsHub>("/api/rooms");
+                endpoints.MapHub<RoomsHub>("/hub/rooms");
             });
         }
     }

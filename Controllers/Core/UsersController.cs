@@ -33,7 +33,7 @@ namespace PotatoServer.Controllers.Core
             _configuration = configuration;
         }
 
-        [HttpPost("login")]
+        [HttpPost("signin")]
         [LoggedActionFilter]
         public async Task<ActionResult<UserLoginResponseVm>> Login([FromBody]UserLoginVm userVm)
         {
@@ -67,16 +67,17 @@ namespace PotatoServer.Controllers.Core
             throw new BadRequestException(_localizer.GetString("WrongEmailOrPassword"));
         }
 
-        [HttpPost("register")]
+        [HttpPost("signup")]
         public async Task<IActionResult> Register([FromBody] UserRegisterVm userVm)
         {
             var user = new User
             {
-                UserName = userVm.Email,
+                UserName = userVm.Username,
                 Email = userVm.Email
             };
 
             var result = await _userManager.CreateAsync(user, userVm.Password);
+            await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, user.Email));
 
             if (result.Succeeded)
                 return Ok();
