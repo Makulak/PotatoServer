@@ -1,16 +1,25 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PotatoServer.Hubs.Rooms
 {
     public class RoomsHub : Hub
     {
-        public async Task GetRooms(int? skip, int? take)
+        private readonly IRoomRepository _roomRepository;
+
+        public RoomsHub(IRoomRepository roomRepository)
         {
-            await Task.FromResult("");
+            _roomRepository = roomRepository;
+        }
+        public async Task GetRooms(int skip, int take)
+        {
+            var rooms = _roomRepository.GetRooms(skip, take);
+            await Clients.All.SendAsync("onGetRooms", rooms);
+        }
+
+        public async Task PlayerEntered()
+        {
+           await Clients.All.SendAsync("OnPlayerEntered");
         }
     }
 }

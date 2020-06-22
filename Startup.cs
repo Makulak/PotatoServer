@@ -18,6 +18,7 @@ using PotatoServer.Database.Models.Core;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PotatoServer.Hubs.TicTacToe;
+using PotatoServer.Hubs.Rooms;
 
 namespace PotatoServer
 {
@@ -118,6 +119,7 @@ namespace PotatoServer
             services.AddTransient<CategoryMapper>();
             services.AddTransient<PositionMapper>();
             services.AddTransient<WordMapper>();
+            services.AddSingleton<IRoomRepository, RoomsRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -137,6 +139,7 @@ namespace PotatoServer
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapHub<TicTacToeHub>("/tic-tac-toe");
+                endpoints.MapHub<RoomsHub>("/api/rooms");
             });
         }
     }
