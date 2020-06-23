@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Threading.Tasks;
 
 namespace PotatoServer.Hubs.Rooms
@@ -13,15 +14,21 @@ namespace PotatoServer.Hubs.Rooms
         {
             _roomRepository = roomRepository;
         }
+
+        public override async Task OnConnectedAsync()
+        {
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            return base.OnDisconnectedAsync(exception);
+        }
+
+        [HubMethodName("getRooms")]
         public async Task GetRooms(int skip, int take)
         {
             var rooms = _roomRepository.GetRooms(skip, take);
             await Clients.All.SendAsync("onGetRooms", rooms);
-        }
-
-        public async Task PlayerEntered()
-        {
-           await Clients.All.SendAsync("OnPlayerEntered");
         }
     }
 }
