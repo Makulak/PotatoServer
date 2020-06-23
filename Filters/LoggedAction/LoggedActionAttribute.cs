@@ -15,10 +15,6 @@ namespace PotatoServer.Filters.LoggedAction
         public bool SaveResponse { get; set; } = true;
         public bool SaveArguments { get; set; } = true;
 
-        public LoggedActionAttribute()
-        {
-        }
-
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var actionDescriptor = ((ControllerActionDescriptor)context.ActionDescriptor);

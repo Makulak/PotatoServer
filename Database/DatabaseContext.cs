@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PotatoServer.Database.Models.Camasutra;
-using PotatoServer.Database.Models.CleverWord;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
@@ -12,18 +10,12 @@ namespace PotatoServer.Database
 {
     public class DatabaseContext : IdentityDbContext<User>
     {
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Position> Positions { get; set; }
-        public DbSet<Word> Words { get; set; }
         public DbSet<LoggedAction> Logs { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new CategoryConfiguration());
-            builder.ApplyConfiguration(new PositionConfiguration());
-            builder.ApplyConfiguration(new WordConfiguration());
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new LoggedActionConfiguration());
 

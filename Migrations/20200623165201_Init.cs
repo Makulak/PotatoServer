@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PotatoServer.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,33 +44,6 @@ namespace PotatoServer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Camasutra_Category",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Camasutra_Category", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CleverWord_Word",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CleverWord_Word", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,24 +153,26 @@ namespace PotatoServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Camasutra_Position",
+                name: "Logs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false)
+                    ControllerName = table.Column<string>(nullable: false),
+                    ActionName = table.Column<string>(nullable: false),
+                    Method = table.Column<string>(nullable: false),
+                    Path = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Camasutra_Position", x => x.Id);
+                    table.PrimaryKey("PK_Logs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Camasutra_Position_Camasutra_Category_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Camasutra_Category",
+                        name: "FK_Logs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -240,28 +215,9 @@ namespace PotatoServer.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Camasutra_Category_Name",
-                table: "Camasutra_Category",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Camasutra_Position_CategoryId",
-                table: "Camasutra_Position",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Camasutra_Position_Name",
-                table: "Camasutra_Position",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CleverWord_Word_Name",
-                table: "CleverWord_Word",
-                column: "Name",
-                unique: true,
-                filter: "[Name] IS NOT NULL");
+                name: "IX_Logs_UserId",
+                table: "Logs",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -282,19 +238,13 @@ namespace PotatoServer.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Camasutra_Position");
-
-            migrationBuilder.DropTable(
-                name: "CleverWord_Word");
+                name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Camasutra_Category");
         }
     }
 }

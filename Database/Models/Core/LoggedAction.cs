@@ -17,7 +17,6 @@ namespace PotatoServer.Database.Models.Core
         public string Path { get; set; }
         public User User { get; set; }
 
-
         public string UserId { get; set; }
     }
 

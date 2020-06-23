@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using PotatoServer.Services.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -133,9 +132,6 @@ namespace PotatoServer
                 });
             services.AddSignalR(x => x.EnableDetailedErrors = true);
 
-            services.AddTransient<CategoryMapper>();
-            services.AddTransient<PositionMapper>();
-            services.AddTransient<WordMapper>();
             services.AddSingleton<IRoomRepository, RoomsRepository>();
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
         }

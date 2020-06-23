@@ -7,10 +7,6 @@ namespace PotatoServer.Filters
 {
     public class HandleExceptionAttribute : ActionFilterAttribute
     {
-        public HandleExceptionAttribute()
-        {
-        }
-
         public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             return base.OnActionExecutionAsync(context, next);
