@@ -9,6 +9,7 @@ namespace PotatoServer.Services
         private Dictionary<string, string> players;
         private List<Room> rooms;
         private int lastRoomId;
+
         public WaitingRoomService()
         {
             rooms = new List<Room>();
@@ -43,7 +44,7 @@ namespace PotatoServer.Services
             return players.Count;
         }
 
-        public Room AddRoom(string name)
+        public Room AddRoom(string name, string password)
         {
             if (rooms.Any(room => room.Name == name))
                 return null;
@@ -51,7 +52,12 @@ namespace PotatoServer.Services
             var room = new Room
             {
                 Id = ++lastRoomId,
-                Name = name
+                Name = name,
+                HasPassword = !string.IsNullOrEmpty(password),
+                Password = password,
+                MaxPlayersCount = 4,
+                Players = new List<string>(),
+                Status = "Open"
             };
             rooms.Add(room);
 
