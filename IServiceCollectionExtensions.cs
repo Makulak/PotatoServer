@@ -25,6 +25,7 @@ namespace PotatoServer
                 {
                     builder
                     .WithOrigins("http://localhost:4200")
+                    .WithOrigins("http://192.168.0.115:4200")
                     .AllowCredentials()
                     .AllowAnyHeader()
                     .AllowAnyMethod();

@@ -13,18 +13,16 @@ namespace PotatoServer.Hubs.WaitingRoom
         {
             _service = service;
         }
+
         public override async Task OnConnectedAsync()
         {
             _service.AddPlayer(Context.User.Identity.Name, Context.ConnectionId);
-            await Clients.All.SendAsync("updatePlayerCount", new { count = _service.GetPlayersCount() });
-            await Clients.All.SendAsync("updateAllRooms", _service.GetRooms());
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             _service.RemovePlayer(Context.User.Identity.Name);
-            await Clients.All.SendAsync("updatePlayerCount", new { count = _service.GetPlayersCount() });
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -33,12 +31,12 @@ namespace PotatoServer.Hubs.WaitingRoom
             await Clients.All.SendAsync("updateAllRooms", _service.GetRooms());
         }
 
-        public async Task AddRoom(string roomName, string password)
+        public async Task CreateRoom(string roomName, string password)
         {
-            var room = _service.AddRoom(roomName, password);
+            var room = _service.CreateRoom(roomName, password);
 
             if(room != null)
-                await Clients.All.SendAsync("roomAdded", room);
+                await Clients.All.SendAsync("createRoom", room);
         }
 
         public async Task RemoveRoom(string roomName)
@@ -46,7 +44,16 @@ namespace PotatoServer.Hubs.WaitingRoom
             var id = _service.RemoveRoom(roomName);
 
             if(id != 0)
-                await Clients.All.SendAsync("roomRemoved", new { roomId = id });
+                await Clients.All.SendAsync("removeRoom", new { roomId = id });
+        }
+
+        public async Task EnterToRoom(int roomId)
+        {
+            var room = _service.GetRoom(roomId);
+            if (room == null)
+                return;
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
         }
     }
 }

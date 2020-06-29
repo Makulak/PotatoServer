@@ -21,6 +21,11 @@ namespace PotatoServer.Services
             return rooms;
         }
 
+        public Room GetRoom(int id)
+        {
+            return rooms.SingleOrDefault(room => room.Id == id);
+        }
+
         public void RemovePlayer(string userName)
         {
             players.Remove(userName);
@@ -39,12 +44,7 @@ namespace PotatoServer.Services
             }
         }
 
-        public int GetPlayersCount()
-        {
-            return players.Count;
-        }
-
-        public Room AddRoom(string name, string password)
+        public Room CreateRoom(string name, string password)
         {
             if (rooms.Any(room => room.Name == name))
                 return null;
@@ -56,7 +56,7 @@ namespace PotatoServer.Services
                 HasPassword = !string.IsNullOrEmpty(password),
                 Password = password,
                 MaxPlayersCount = 4,
-                Players = new List<string>(),
+                PlayersCount = 0,
                 Status = "Open"
             };
             rooms.Add(room);

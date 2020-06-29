@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
-namespace PotatoServer.Hubs.Rooms
+namespace PotatoServer.Hubs
 {
     public class EmailBasedUserIdProvider : IUserIdProvider
     {

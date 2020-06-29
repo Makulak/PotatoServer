@@ -6,11 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using PotatoServer.Hubs.TicTacToe;
-using PotatoServer.Hubs.Rooms;
 using Microsoft.AspNetCore.SignalR;
 using PotatoServer.Services;
 using PotatoServer.Hubs.WaitingRoom;
+using PotatoServer.Hubs;
 
 namespace PotatoServer
 {
@@ -36,7 +35,6 @@ namespace PotatoServer
             services.SetupHealthChecks(_configuration);
             services.AddSignalR(x => x.EnableDetailedErrors = true);
 
-            services.AddSingleton<IRoomRepository, RoomsRepository>();
             services.AddSingleton<WaitingRoomService>();
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
         }
@@ -56,8 +54,6 @@ namespace PotatoServer
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
-                endpoints.MapHub<TicTacToeHub>("/tic-tac-toe");
-                endpoints.MapHub<RoomsHub>("/hub/rooms");
                 endpoints.MapHub<WaitingRoomHub>("/hub/waiting-room");
             });
         }
