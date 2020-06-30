@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using PotatoServer.Services;
+using PotatoServer.Services.Interfaces;
+using PotatoServer.ViewModels;
 using System;
 using System.Threading.Tasks;
 
@@ -7,53 +8,57 @@ namespace PotatoServer.Hubs.WaitingRoom
 {
     public class WaitingRoomHub : Hub
     {
-        private readonly WaitingRoomService _service;
+        private readonly IWaitingRoomService _waitingRoomService;
+        private readonly IConnectionService _connectionService;
 
-        public WaitingRoomHub(WaitingRoomService service)
+        public WaitingRoomHub(IWaitingRoomService waitingRoomService,
+                              IConnectionService connectionService)
         {
-            _service = service;
+            _waitingRoomService = waitingRoomService;
+            _connectionService = connectionService;
         }
 
         public override async Task OnConnectedAsync()
         {
-            _service.AddPlayer(Context.User.Identity.Name, Context.ConnectionId);
+            _connectionService.AddPlayer(Context.User.Identity.Name, Context.ConnectionId);
+            await Clients.Caller.SendAsync("updateAllRooms", _waitingRoomService.GetRooms());
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            _service.RemovePlayer(Context.User.Identity.Name);
+            _connectionService.RemovePlayer(Context.User.Identity.Name);
             await base.OnDisconnectedAsync(exception);
         }
 
         public async Task GetAllRooms()
         {
-            await Clients.All.SendAsync("updateAllRooms", _service.GetRooms());
+            await Clients.All.SendAsync("updateAllRooms", _waitingRoomService.GetRooms());
         }
 
-        public async Task CreateRoom(string roomName, string password)
+        public async Task CreateRoom(RoomViewModel_Post room)
         {
-            var room = _service.CreateRoom(roomName, password);
+            var createdRoom = _waitingRoomService.CreateRoom(room.Name, room.Password);
 
-            if(room != null)
-                await Clients.All.SendAsync("createRoom", room);
+            if (createdRoom != null)
+                await Clients.All.SendAsync("createRoom", createdRoom);
         }
 
-        public async Task RemoveRoom(string roomName)
+        public async Task RemoveRoom(int id)
         {
-            var id = _service.RemoveRoom(roomName);
+            _waitingRoomService.RemoveRoom(id);
 
-            if(id != 0)
+            if (id != 0)
                 await Clients.All.SendAsync("removeRoom", new { roomId = id });
         }
 
-        public async Task EnterToRoom(int roomId)
+        public async Task TryEnterRoom(int id)
         {
-            var room = _service.GetRoom(roomId);
+            var room = _waitingRoomService.GetRoom(id);
             if (room == null)
                 return;
 
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomId.ToString());
+            await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
         }
     }
 }

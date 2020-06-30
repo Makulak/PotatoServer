@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace PotatoServer.Models
+﻿namespace PotatoServer.ViewModels
 {
-    public class Room
+    public class RoomViewModel_Get
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Status { get; set; }
         public int PlayersCount { get; set; }
         public int MaxPlayersCount { get; set; }
-        public bool HasPassword => !string.IsNullOrEmpty(Password);
-        public string Password { get; set; }
+        public bool HasPassword { get; set; }
     }
 }

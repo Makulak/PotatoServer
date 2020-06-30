@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using PotatoServer.Services;
 using PotatoServer.Hubs.WaitingRoom;
 using PotatoServer.Hubs;
+using PotatoServer.Services.Interfaces;
 
 namespace PotatoServer
 {
@@ -35,8 +36,11 @@ namespace PotatoServer
             services.SetupHealthChecks(_configuration);
             services.AddSignalR(x => x.EnableDetailedErrors = true);
 
-            services.AddSingleton<WaitingRoomService>();
+            services.AddSingleton<IWaitingRoomService, WaitingRoomService>();
+            services.AddSingleton<IConnectionService, ConnectionService>();
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+
+            services.AddTransient<MapperService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,6 +59,7 @@ namespace PotatoServer
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapHub<WaitingRoomHub>("/hub/waiting-room");
+                endpoints.MapHub<GameHub>("/hub/game");
             });
         }
     }
