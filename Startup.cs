@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR;
 using PotatoServer.Services;
-using PotatoServer.Hubs.WaitingRoom;
 using PotatoServer.Hubs;
 using PotatoServer.Services.Interfaces;
 
@@ -58,8 +57,7 @@ namespace PotatoServer
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
-                endpoints.MapHub<WaitingRoomHub>("/hub/waiting-room");
-                endpoints.MapHub<GameHub>("/hub/game");
+                endpoints.MapHub<PotatoHub>("/hub/potato");
             });
         }
     }
