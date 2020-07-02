@@ -1,44 +1,16 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using PotatoServer.Services.Interfaces;
+using PotatoServer.Exceptions;
 using PotatoServer.ViewModels;
-using System;
 using System.Threading.Tasks;
 
 namespace PotatoServer.Hubs
 {
     public partial class PotatoHub : Hub
     {
-        private readonly IWaitingRoomService _waitingRoomService;
-        private readonly IConnectionService _connectionService;
-
-        public PotatoHub(IWaitingRoomService waitingRoomService,
-                              IConnectionService connectionService)
-        {
-            _waitingRoomService = waitingRoomService;
-            _connectionService = connectionService;
-        }
-
-        public override async Task OnConnectedAsync()
-        {
-            _connectionService.AddPlayer(Context.User.Identity.Name, Context.ConnectionId);
-
-            await Groups.AddToGroupAsync(Context.ConnectionId, "WaitingRoom");
-            await Clients.Caller.SendAsync("updateAllRooms", _waitingRoomService.GetRooms());
-
-            await base.OnConnectedAsync();
-        }
-
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            _connectionService.RemovePlayer(Context.User.Identity.Name);
-
-            await base.OnDisconnectedAsync(exception);
-        }
-
-        public async Task GetAllRooms()
+        public async Task GetRooms()
         {
             var rooms = _waitingRoomService.GetRooms();
-            await Clients.Group("WaitingRoom").SendAsync("updateAllRooms", rooms);
+            await Clients.Caller.SendAsync("updateRoomsList", rooms);
         }
 
         public async Task CreateRoom(RoomViewModel_Post room)
@@ -46,7 +18,14 @@ namespace PotatoServer.Hubs
             var createdRoom = _waitingRoomService.CreateRoom(room.Name, room.Password);
 
             if (createdRoom != null)
-                await Clients.Group("WaitingRoom").SendAsync("createRoom", createdRoom);
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, createdRoom.Id.ToString());
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, "WaitingRoom");
+
+                await Clients.Group("WaitingRoom").SendAsync("addRoomToList", createdRoom);
+            }
+            else
+                throw new ServerErrorException(); //TODO: Message
         }
 
         public async Task RemoveRoom(int id)
@@ -54,16 +33,9 @@ namespace PotatoServer.Hubs
             var deletedId = _waitingRoomService.RemoveRoom(id);
 
             if (deletedId != 0)
-                await Clients.Group("WaitingRoom").SendAsync("removeRoom", new { roomId = id });
-        }
-
-        public async Task TryEnterRoom(int id)
-        {
-            var room = _waitingRoomService.GetRoom(id);
-            if (room == null)
-                return;
-
-            await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
+                await Clients.Group("WaitingRoom").SendAsync("removeRoomFromList", new { roomId = id });
+            else
+                throw new ServerErrorException(); //TODO: Message
         }
     }
 }

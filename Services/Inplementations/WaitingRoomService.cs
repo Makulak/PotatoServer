@@ -1,7 +1,6 @@
 ﻿using PotatoServer.Exceptions;
 using PotatoServer.Models;
 using PotatoServer.Services.Interfaces;
-using PotatoServer.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,39 +10,36 @@ namespace PotatoServer.Services
     {
         private List<Room> rooms;
         private int lastRoomId;
-        private readonly MapperService _mapper;
 
-        public WaitingRoomService(MapperService mapper)
+        public WaitingRoomService()
         {
             rooms = new List<Room>();
-            _mapper = mapper;
         }
 
-        public List<RoomViewModel_Get> GetRooms()
+        public List<Room> GetRooms()
         {
-            return _mapper.MapToRoomViewModel(rooms).ToList();
+            return rooms;
         }
 
-        public RoomViewModel_Get GetRoom(int id)
+        public Room GetRoom(int id)
         {
-            var room = rooms.SingleOrDefault(room => room.Id == id);
-            return _mapper.MapToRoomViewModel(room);
+            return rooms.SingleOrDefault(room => room.Id == id);
         }
 
-        public RoomViewModel_Get CreateRoom(string name, string password)
+        public Room CreateRoom(string name, string password)
         {
             var room = new Room
             {
                 Id = ++lastRoomId,
                 Name = name,
                 Password = password,
-                MaxPlayersCount = 4,
+                MaxPlayersCount = 2,
                 PlayersCount = 0,
                 Status = "Open"
             };
             rooms.Add(room);
 
-            return _mapper.MapToRoomViewModel(room);
+            return room;
         }
 
         public int RemoveRoom(int id)
