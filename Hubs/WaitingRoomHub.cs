@@ -20,8 +20,9 @@ namespace PotatoServer.Hubs
             if (createdRoom != null)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, createdRoom.Id.ToString());
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, "WaitingRoom");
+                await Clients.Caller.SendAsync("tryEnterCreatedRoom", new { roomId = createdRoom.Id});
 
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, "WaitingRoom");
                 await Clients.Group("WaitingRoom").SendAsync("addRoomToList", createdRoom);
             }
             else
