@@ -21,8 +21,6 @@ namespace PotatoServer.Hubs
         {
             _connectionService.AddPlayer(Context.User.Identity.Name, Context.ConnectionId);
 
-            await Groups.AddToGroupAsync(Context.ConnectionId, "WaitingRoom");
-
             await base.OnConnectedAsync();
         }
 

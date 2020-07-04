@@ -7,6 +7,11 @@ namespace PotatoServer.Hubs
 {
     public partial class PotatoHub : Hub
     {
+        public async Task EnterWaitingRoom()
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, "WaitingRoom");
+        }
+
         public async Task GetRooms()
         {
             var rooms = _waitingRoomService.GetRooms();
