@@ -15,7 +15,9 @@ namespace PotatoServer.Hubs
         public async Task GetRooms()
         {
             var rooms = _waitingRoomService.GetRooms();
-            await Clients.Caller.SendAsync("updateRoomsList", rooms);
+            var roomsVm = _mapper.MapToRoomViewModel(rooms);
+
+            await Clients.Caller.SendAsync("updateRoomsList", roomsVm);
         }
 
         public async Task CreateRoom(RoomViewModel_Post room)
@@ -24,21 +26,23 @@ namespace PotatoServer.Hubs
 
             if (createdRoom != null)
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, createdRoom.Id.ToString());
-                await Clients.Caller.SendAsync("tryEnterCreatedRoom", new { roomId = createdRoom.Id});
+                var createdRoomVm = _mapper.MapToRoomViewModel(createdRoom);
+
+                await Groups.AddToGroupAsync(Context.ConnectionId, createdRoomVm.Id);
+                await Clients.Caller.SendAsync("navigateToRoom", new { roomId = createdRoomVm.Id});
 
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, "WaitingRoom");
-                await Clients.Group("WaitingRoom").SendAsync("addRoomToList", createdRoom);
+                await Clients.Group("WaitingRoom").SendAsync("addRoomToList", createdRoomVm);
             }
             else
                 throw new ServerErrorException(); //TODO: Message
         }
 
-        public async Task RemoveRoom(int id)
+        public async Task RemoveRoom(string id)
         {
             var deletedId = _waitingRoomService.RemoveRoom(id);
 
-            if (deletedId != 0)
+            if (!string.IsNullOrEmpty(deletedId))
                 await Clients.Group("WaitingRoom").SendAsync("removeRoomFromList", new { roomId = id });
             else
                 throw new ServerErrorException(); //TODO: Message

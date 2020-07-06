@@ -1,6 +1,4 @@
-﻿using PotatoServer.ViewModels;
-
-namespace PotatoServer.Models
+﻿namespace PotatoServer.Models
 {
     public class UserConnection
     {

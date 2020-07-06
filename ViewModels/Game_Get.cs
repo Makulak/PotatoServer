@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PotatoServer.ViewModels
 {
-    public class GameSettings_Get
+    public class Game_Get
     {
     }
 }

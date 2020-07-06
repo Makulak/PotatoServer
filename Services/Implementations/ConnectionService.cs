@@ -4,7 +4,7 @@ using PotatoServer.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PotatoServer.Services
+namespace PotatoServer.Services.Implementations
 {
     public class ConnectionService : IConnectionService
     {
@@ -30,7 +30,7 @@ namespace PotatoServer.Services
             var player = players.SingleOrDefault(player => player.Username == userName);
 
             if (player != null)
-                throw new BadRequestException(); //TODO: message
+                throw new ServerErrorException(); //TODO: message
 
             players.Add(new UserConnection
             {

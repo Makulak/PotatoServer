@@ -19,6 +19,10 @@ namespace PotatoServer.Database
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new LoggedActionConfiguration());
 
+            //builder.ApplyConfiguration(new BlackCardConfiguration());
+            //builder.ApplyConfiguration(new WhiteCardConfiguration());
+            //builder.ApplyConfiguration(new CardSetConfiguration());
+
             base.OnModelCreating(builder);
         }
 

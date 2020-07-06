@@ -1,11 +1,12 @@
-﻿using PotatoServer.Models;
-using PotatoServer.ViewModels;
+﻿using PotatoServer.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using PotatoServer.Services.Interfaces;
+using PotatoServer.Database.MongoDb;
 
-namespace PotatoServer.Services
+namespace PotatoServer.Services.Implementations
 {
-    public class MapperService
+    public class MapperService : IMapperService
     {
         public RoomViewModel_Get MapToRoomViewModel(Room room)
         {

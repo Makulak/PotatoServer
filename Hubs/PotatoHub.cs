@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Localization;
 using PotatoServer.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -9,26 +10,37 @@ namespace PotatoServer.Hubs
     {
         private readonly IWaitingRoomService _waitingRoomService;
         private readonly IConnectionService _connectionService;
+        private readonly IGameService _gameService;
+        private readonly IMapperService _mapper;
+        private readonly IStringLocalizer<SharedResources> _localizer;
 
         public PotatoHub(IWaitingRoomService waitingRoomService,
-                              IConnectionService connectionService)
+                         IConnectionService connectionService,
+                         IGameService gameService,
+                         IMapperService mapper,
+                         IStringLocalizer<SharedResources> localizer)
         {
             _waitingRoomService = waitingRoomService;
             _connectionService = connectionService;
+            _gameService = gameService;
+            _mapper = mapper;
+            _localizer = localizer;
         }
 
         public override async Task OnConnectedAsync()
         {
-            _connectionService.AddPlayer(Context.User.Identity.Name, Context.ConnectionId);
+            _connectionService.AddPlayer(UserIdentityName, Context.ConnectionId);
 
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            _connectionService.RemovePlayer(Context.User.Identity.Name);
+            _connectionService.RemovePlayer(UserIdentityName);
 
             await base.OnDisconnectedAsync(exception);
         }
+
+        private string UserIdentityName => Context.User.Identity.Name;
     }
 }

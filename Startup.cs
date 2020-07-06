@@ -2,14 +2,16 @@ using PotatoServer.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR;
-using PotatoServer.Services;
 using PotatoServer.Hubs;
 using PotatoServer.Services.Interfaces;
+using PotatoServer.Services.Implementations;
+using PotatoServer.Database.MongoDb.Settings;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace PotatoServer
 {
@@ -35,11 +37,17 @@ namespace PotatoServer
             services.SetupHealthChecks(_configuration);
             services.AddSignalR(x => x.EnableDetailedErrors = true);
 
+            services.Configure<MongoDbSettings>(_configuration.GetSection(nameof(MongoDbSettings)));
+            services.AddSingleton<IMongoDbSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+
             services.AddSingleton<IWaitingRoomService, WaitingRoomService>();
+
             services.AddSingleton<IConnectionService, ConnectionService>();
+            services.AddSingleton<IGameService, GameService>();
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
-            services.AddTransient<MapperService>();
+            services.AddTransient<IMapperService, MapperService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
