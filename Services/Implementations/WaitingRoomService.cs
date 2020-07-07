@@ -75,9 +75,7 @@ namespace PotatoServer.Services.Implementations
                 room.Players.Add(player);
             }
             else
-            {
                 room.Players.Add(new GamePlayer(username));
-            }
 
             _rooms.ReplaceOne(room => room.Id == roomId, room);
         }
@@ -100,9 +98,7 @@ namespace PotatoServer.Services.Implementations
                 room.Players.Add(player);
             }
             else
-            {
                 throw new BadRequestException(); // TODO: Message
-            }
         }
     }
 }

@@ -47,5 +47,57 @@ namespace PotatoServer.Hubs
             else
                 throw new ServerErrorException(); //TODO: Message
         }
+
+        public async Task TryEnterRoom(string roomId, string password)
+        {
+            // Getting room to check requirements
+            var room = _waitingRoomService.GetRoom(roomId);
+
+            if (room == null)
+                throw new NotFoundException(); // TODO: Message
+
+            if (room.HasPassword && password != room.Password)
+                throw new BadRequestException(); //TODO: Message
+
+            if (room.MaxPlayersCount == room.PlayersCount)
+                throw new BadRequestException(); //TODO: Message
+
+            _waitingRoomService.EnterRoom(roomId, UserIdentityName);
+
+            // Getting room to send updated object
+            room = _waitingRoomService.GetRoom(roomId);
+
+            var roomVm = _mapper.MapToRoomViewModel(room);
+
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, "WaitingRoom");
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
+
+            await Clients.Group("WaitingRoom").SendAsync("updateRoomOnList", roomVm);
+            await Clients.Group(roomId).SendAsync("addToPlayersList", new { username = UserIdentityName, Score = 0 });
+        }
+
+        public async Task LeaveRoom(string roomId)
+        {
+            var room = _waitingRoomService.GetRoom(roomId);
+
+            if (room == null)
+                throw new NotFoundException(); // TODO: Message
+
+            var roomVm = _mapper.MapToRoomViewModel(room);
+
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId);
+            
+            if (roomVm.PlayersCount == 1)
+            {
+                _waitingRoomService.RemoveRoom(roomId);
+                await Clients.Group("WaitingRoom").SendAsync("removeRoomFromList", new { roomId = roomId });
+            }
+            else
+            {
+                _waitingRoomService.LeaveRoom(roomId, UserIdentityName);
+                await Clients.Group(roomId).SendAsync("removePlayerFromList", new { username = UserIdentityName });
+                await Clients.Group("WaitingRoom").SendAsync("updateRoomOnList", roomVm);
+            }
+        }
     }
 }
