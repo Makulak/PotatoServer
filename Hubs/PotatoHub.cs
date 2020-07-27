@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Localization;
+using PotatoServer.Exceptions;
 using PotatoServer.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -36,7 +37,15 @@ namespace PotatoServer.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
+            var user = _connectionService.GetPlayer(UserIdentityName);
+
+            if (user == null)
+                throw new ServerErrorException(); //TODO: Message
+
             _connectionService.RemovePlayer(UserIdentityName);
+
+            if (!string.IsNullOrEmpty(user.RoomId))
+                await LeaveRoom(user.RoomId); //TODO: Is it ok?
 
             await base.OnDisconnectedAsync(exception);
         }

@@ -56,7 +56,7 @@ namespace PotatoServer.Services.Implementations
             return id;
         }
 
-        public void EnterRoom(string roomId, string username)
+        public async void EnterRoom(string roomId, string username)
         {
             var room = _rooms.Find(room => room.Id == roomId).SingleOrDefault();
 
@@ -68,19 +68,23 @@ namespace PotatoServer.Services.Implementations
 
             var player = room.Players.SingleOrDefault(gamePlayer => gamePlayer.Username == username);
 
-            if (player != null)
+            if (player == null)
             {
-                room.Players.Remove(player);
-                player.IsActive = true;
-                room.Players.Add(player);
+                room.Players.Add(new GamePlayer(username));
+                var updateDef = Builders<Room>.Update.Set(x => x.Players, room.Players);
+
+                await _rooms.UpdateOneAsync(room => room.Id == roomId, updateDef);
             }
             else
-                room.Players.Add(new GamePlayer(username));
+            {
+                player.IsActive = true;
+                var updateDef = Builders<Room>.Update.Set(x => x.Players, room.Players);
 
-            _rooms.ReplaceOne(room => room.Id == roomId, room);
+                await _rooms.UpdateOneAsync(room => room.Id == roomId, updateDef);
+            }
         }
 
-        public void LeaveRoom(string roomId, string username)
+        public async void LeaveRoom(string roomId, string username)
         {
             var room = _rooms.Find(room => room.Id == roomId).SingleOrDefault();
 
@@ -91,14 +95,13 @@ namespace PotatoServer.Services.Implementations
 
             var player = room.Players.SingleOrDefault(gamePlayer => gamePlayer.Username == username);
 
-            if (player != null)
-            {
-                room.Players.Remove(player);
-                player.IsActive = false;
-                room.Players.Add(player);
-            }
-            else
+            if (player == null)
                 throw new BadRequestException(); // TODO: Message
+
+            player.IsActive = false;
+            var updateDef = Builders<Room>.Update.Set(x => x.Players, room.Players);
+
+            await _rooms.UpdateOneAsync(room => room.Id == roomId, updateDef);
         }
     }
 }

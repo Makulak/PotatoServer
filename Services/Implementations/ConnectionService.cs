@@ -38,5 +38,18 @@ namespace PotatoServer.Services.Implementations
                 ConnectionId = connectionId
             });
         }
+
+        public UserConnection GetPlayer(string userName)
+        {
+            return players.SingleOrDefault(player => player.Username == userName);
+        }
+
+        public void UpdateRoomId(string userName, string roomId)
+        {
+            var player = players.SingleOrDefault(player => player.Username == userName);
+
+            if (player != null)
+                player.RoomId = roomId;
+        }
     }
 }

@@ -63,6 +63,7 @@ namespace PotatoServer.Hubs
                 throw new BadRequestException(); //TODO: Message
 
             _waitingRoomService.EnterRoom(roomId, UserIdentityName);
+            _connectionService.UpdateRoomId(UserIdentityName, roomId);
 
             // Getting room to send updated object
             room = _waitingRoomService.GetRoom(roomId);
@@ -83,11 +84,11 @@ namespace PotatoServer.Hubs
             if (room == null)
                 throw new NotFoundException(); // TODO: Message
 
-            var roomVm = _mapper.MapToRoomViewModel(room);
-
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId);
-            
-            if (roomVm.PlayersCount == 1)
+
+            _connectionService.UpdateRoomId(UserIdentityName, null);
+
+            if (room.PlayersCount == 1)
             {
                 _waitingRoomService.RemoveRoom(roomId);
                 await Clients.Group("WaitingRoom").SendAsync("removeRoomFromList", new { roomId = roomId });
@@ -96,6 +97,10 @@ namespace PotatoServer.Hubs
             {
                 _waitingRoomService.LeaveRoom(roomId, UserIdentityName);
                 await Clients.Group(roomId).SendAsync("removePlayerFromList", new { username = UserIdentityName });
+
+                room = _waitingRoomService.GetRoom(roomId);
+                var roomVm = _mapper.MapToRoomViewModel(room);
+
                 await Clients.Group("WaitingRoom").SendAsync("updateRoomOnList", roomVm);
             }
         }
