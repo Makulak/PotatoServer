@@ -45,7 +45,7 @@ namespace PotatoServer.Hubs
             _connectionService.RemovePlayer(UserIdentityName);
 
             if (!string.IsNullOrEmpty(user.RoomId))
-                await LeaveRoom(user.RoomId); //TODO: Is it ok?
+                await LeaveRoom(user.RoomId);
 
             await base.OnDisconnectedAsync(exception);
         }
