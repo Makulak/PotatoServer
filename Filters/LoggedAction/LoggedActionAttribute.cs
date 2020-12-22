@@ -25,7 +25,7 @@ namespace PotatoServer.Filters.LoggedAction
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var actionDescriptor = ((ControllerActionDescriptor)context.ActionDescriptor);
+            var actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
             var httpContext = (DefaultHttpContext)context.HttpContext;
             var identity = (ClaimsIdentity)httpContext.User.Identity;
 

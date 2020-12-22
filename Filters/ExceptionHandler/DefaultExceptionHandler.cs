@@ -1,4 +1,5 @@
 ﻿using PotatoServer.Exceptions;
+using PotatoServer.Helpers;
 using System;
 
 namespace PotatoServer.Filters.ExceptionHandler
@@ -14,7 +15,8 @@ namespace PotatoServer.Filters.ExceptionHandler
                 return new ExceptionData()
                 {
                     StatusCode = potatoEx.StatusCode,
-                    Message = potatoEx.Message
+                    Message = potatoEx.Message,
+                    InnerException = potatoEx.GetMostInnerException()
                 };
             }
             else
@@ -22,7 +24,8 @@ namespace PotatoServer.Filters.ExceptionHandler
                 return new ExceptionData()
                 {
                     StatusCode = 500,
-                    Message = exception.Message
+                    Message = exception.Message,
+                    InnerException = exception.GetMostInnerException()
                 };
             }
         }
