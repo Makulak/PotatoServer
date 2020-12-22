@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using PotatoServer.Database;
 using PotatoServer.Database.Models.Core;
 using PotatoServer.Exceptions;
-using PotatoServer.Filters;
+using PotatoServer.Filters.HandleException;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +38,7 @@ namespace PotatoServer
         {
             services.AddMvc(config =>
             {
-                config.Filters.Add(new HandleExceptionAttribute());
+                config.Filters.Add(new HandleExceptionFilterAttribute());
             })
             .AddDataAnnotationsLocalization(options =>
             {

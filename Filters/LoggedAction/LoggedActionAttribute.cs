@@ -3,17 +3,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
-using System;
+using PotatoServer.Filters.ExceptionHandler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
 namespace PotatoServer.Filters.LoggedAction
 {
+
     public class LoggedActionAttribute : ActionFilterAttribute
     {
+        private IExceptionHandler _exceptionHandler;
+
         public bool SaveResponse { get; set; } = true;
         public bool SaveArguments { get; set; } = true;
+
+        public LoggedActionAttribute(DefaultExceptionHandler exceptionHandler)
+        {
+            _exceptionHandler = exceptionHandler;
+        }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -32,18 +40,25 @@ namespace PotatoServer.Filters.LoggedAction
             base.OnActionExecuting(context);
         }
 
-        public override void OnResultExecuted(ResultExecutedContext context)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
+            int? responseCode = null;
+            string responseValue = string.Empty;
+
             if (context.Result is ObjectResult objectResult)
             {
-                var responseCode = objectResult.StatusCode;
-                var responseValue = SaveResponse ? GetObjectResultResponse(objectResult) : null;
+                responseCode = objectResult.StatusCode;
+                responseValue = SaveResponse ? GetObjectResultResponse(objectResult) : null;
             }
-            else
+            else if (context.Exception != null)
             {
-                throw new NotImplementedException("Error OnResultExecuted, not supported Result: " + context.Result.ToString());
+                var exceptionData = _exceptionHandler.Handle(context.Exception);
+
+                responseCode = exceptionData.StatusCode;
+                responseValue = exceptionData.Message;
             }
-            base.OnResultExecuted(context);
+
+            base.OnActionExecuted(context);
         }
 
         public virtual IDictionary<string, object> GetActionArguments(ActionExecutingContext context)
@@ -55,7 +70,7 @@ namespace PotatoServer.Filters.LoggedAction
         {
             var result = objectResult.Value;
             var tokenProperty = result.GetType().GetProperty("Token");
-            if(tokenProperty != null)
+            if (tokenProperty != null)
                 tokenProperty.SetValue(result, "token-value-hidden");
 
             return JsonConvert.SerializeObject(result);

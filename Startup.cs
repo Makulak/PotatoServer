@@ -12,6 +12,7 @@ using PotatoServer.Services.Implementations;
 using PotatoServer.Database.MongoDb.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
+using PotatoServer.Filters.ExceptionHandler;
 
 namespace PotatoServer
 {
@@ -42,12 +43,15 @@ namespace PotatoServer
                 sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
             services.AddSingleton<IWaitingRoomService, WaitingRoomService>();
-
             services.AddSingleton<IConnectionService, ConnectionService>();
             services.AddSingleton<IGameService, GameService>();
+
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
             services.AddTransient<IMapperService, MapperService>();
+
+            services.AddTransient<DefaultExceptionHandler>();
+            services.AddTransient<HideExceptionHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

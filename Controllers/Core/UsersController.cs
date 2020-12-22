@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using PotatoServer.Database.Models.Core;
 using PotatoServer.ViewModels.Core.User;
 using PotatoServer.Filters.LoggedAction;
+using PotatoServer.Helpers;
 
 namespace PotatoServer.Controllers.Core
 {
@@ -52,9 +53,9 @@ namespace PotatoServer.Controllers.Core
                 var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
 
                 var token = new JwtSecurityToken(
-                    _configuration["tokens:issuer"],
-                    _configuration["tokens:audience"],
-                    expires: DateTime.UtcNow.AddDays(1),
+                    _configuration["Tokens:Issuer"],
+                    _configuration["Tokens:Audience"],
+                    expires: DateTime.UtcNow.AddMinutes(double.Parse(_configuration["Tokens:Expires"])),
                     claims: claims,
                     signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256));
 
@@ -82,7 +83,7 @@ namespace PotatoServer.Controllers.Core
             if (result.Succeeded)
                 return Ok();
 
-            throw new BadRequestException(string.Concat(result.Errors.Select(e => e.Description)));
+            throw new BadRequestException(result.GetErrorString());
         }
     }
 }

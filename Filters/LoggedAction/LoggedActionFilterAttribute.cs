@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PotatoServer.Filters.ExceptionHandler;
 
 namespace PotatoServer.Filters.LoggedAction
 {
