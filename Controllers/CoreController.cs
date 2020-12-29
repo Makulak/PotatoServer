@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using PotatoServer.Exceptions;
-using PotatoServer.Filters.LoggedAction;
-using PotatoServer.ViewModels.ServerSettings.Core;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using PotatoServer.Exceptions;
+using PotatoServer.Filters.HandleException;
+using PotatoServer.Filters.LoggedAction;
 
-namespace PotatoServer.Controllers.Core
+namespace PotatoServer.Controllers
 {
     [Route("api/core")]
     [ApiController]
@@ -20,20 +20,21 @@ namespace PotatoServer.Controllers.Core
         }
 
         [HttpGet("server-settings")]
-        public async Task<ActionResult<ServerSettingsGetVm>> GetServerSettings()
+        public async Task<ActionResult> GetServerSettings()
         {
-            return await Task.FromResult(new ServerSettingsGetVm
+            return await Task.FromResult(Ok(new
             {
                 RequiredLength = int.Parse(_configuration["Password:RequiredLength"]),
                 RequireDigit = bool.Parse(_configuration["Password:RequireDigit"]),
                 RequireLowercase = bool.Parse(_configuration["Password:RequireLowercase"]),
                 RequireUppercase = bool.Parse(_configuration["Password:RequireUppercase"]),
                 RequireNonAlphanumeric = bool.Parse(_configuration["Password:RequireNonAlphanumeric"])
-            });
+            }));
         }
 
-        [LoggedActionFilter]
         [HttpGet("test-status-code/{code}")]
+        [HandleExceptionFilter]
+        [LoggedActionFilter]
         public ActionResult GetProperStatusCode(int code)
         {
             switch (code)
@@ -46,10 +47,8 @@ namespace PotatoServer.Controllers.Core
                     throw new NotFoundException("NotFound");
                 case 500:
                     throw new ServerErrorException("ServerError");
-                case 100:
-                    throw new NullReferenceException("Dupa");
                 default:
-                    throw new ServerErrorException("Not supported exception");
+                    throw new Exception("Not supported exception");
             }
         }
     }

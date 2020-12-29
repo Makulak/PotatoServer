@@ -33,7 +33,7 @@ namespace PotatoServer.Helpers
             if (_localizer != null)
                 throw new InvalidOperationException(_localizer.GetString("Annotation_NotSupportedObjectType", value.GetType().Name));
                 
-            throw new InvalidOperationException(string.Format("Object type {0} is not supported", value.GetType().Name));
+            throw new InvalidOperationException($"Object type {value.GetType().Name} is not supported");
         }
 
         public override string FormatErrorMessage(string name)
@@ -41,7 +41,7 @@ namespace PotatoServer.Helpers
             if (_localizer != null)
                 return _localizer.GetString("Annotation_ValueMustBeMinimum", name, MinimumValue);
 
-            return string.Format("Value for {0} must at least {1}.", name, MinimumValue);
+            return $"Value for {name} must at least {MinimumValue}.";
         }
 
         private bool HandleInt(int intValue)

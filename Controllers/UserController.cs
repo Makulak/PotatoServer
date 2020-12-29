@@ -1,31 +1,28 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using PotatoServer.Exceptions;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Configuration;
-using PotatoServer.Database.Models.Core;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using PotatoServer.Exceptions;
+using System.Security.Claims;
 using PotatoServer.ViewModels.Core.User;
-using PotatoServer.Filters.LoggedAction;
 using PotatoServer.Helpers;
 
-namespace PotatoServer.Controllers.Core
+namespace PotatoServer.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class UsersController : Controller
+    public class UsersController<TUser> : Controller where TUser : IdentityUser, new()
     {
-        private UserManager<User> _userManager;
+        private UserManager<TUser> _userManager;
         private IStringLocalizer<SharedResources> _localizer;
         private IConfiguration _configuration;
 
-        public UsersController(UserManager<User> userManager,
+        public UsersController(UserManager<TUser> userManager,
             IStringLocalizer<SharedResources> localizer,
             IConfiguration configuration)
         {
@@ -35,8 +32,7 @@ namespace PotatoServer.Controllers.Core
         }
 
         [HttpPost("signin")]
-        [LoggedActionFilter]
-        public async Task<ActionResult<UserLoginResponseVm>> Login([FromBody]UserLoginVm userVm)
+        public async Task<IActionResult> Login([FromBody] UserLoginVm userVm)
         {
             var user = await _userManager.FindByEmailAsync(userVm.Email);
 
@@ -59,7 +55,7 @@ namespace PotatoServer.Controllers.Core
                     claims: claims,
                     signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256));
 
-                return Ok(new UserLoginResponseVm()
+                return Ok(new
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     Expires = token.ValidTo
@@ -71,7 +67,7 @@ namespace PotatoServer.Controllers.Core
         [HttpPost("signup")]
         public async Task<IActionResult> Register([FromBody] UserRegisterVm userVm)
         {
-            var user = new User
+            var user = new TUser
             {
                 UserName = userVm.Username,
                 Email = userVm.Email

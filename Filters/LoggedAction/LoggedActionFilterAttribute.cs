@@ -6,7 +6,7 @@ namespace PotatoServer.Filters.LoggedAction
     {
         public LoggedActionFilterAttribute() : base(typeof(LoggedActionAttribute))
         {
-            Order = -10000;
+            //Order = -10000;
         }
     }
 }

@@ -1,27 +1,22 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using System;
-using PotatoServer.Database.Models.Core;
+using PotatoServer.Database.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace PotatoServer.Database
 {
-    public class DatabaseContext : IdentityDbContext<User>
+    public class CoreDatabaseContext : IdentityDbContext<User>
     {
-        public DbSet<LoggedAction> Logs { get; set; }
-
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
+        public CoreDatabaseContext() { }
+        public CoreDatabaseContext(DbContextOptions<CoreDatabaseContext> options) : base(options) { }
+        protected CoreDatabaseContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new LoggedActionConfiguration());
-
-            //builder.ApplyConfiguration(new BlackCardConfiguration());
-            //builder.ApplyConfiguration(new WhiteCardConfiguration());
-            //builder.ApplyConfiguration(new CardSetConfiguration());
 
             base.OnModelCreating(builder);
         }

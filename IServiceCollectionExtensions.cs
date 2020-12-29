@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
-using PotatoServer.Database;
-using PotatoServer.Database.Models.Core;
 using PotatoServer.Exceptions;
-using PotatoServer.Filters.HandleException;
 using System;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,15 +16,14 @@ namespace PotatoServer
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection SetupCors(this IServiceCollection services)
+        public static IServiceCollection SetupCors(this IServiceCollection services, params string[] addresses)
         {
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
                 {
+                    addresses.Select(address => builder.WithOrigins(address));
                     builder
-                    .WithOrigins("http://localhost:4200")
-                    .WithOrigins("http://192.168.0.115:4200")
                     .AllowCredentials()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
@@ -34,22 +32,11 @@ namespace PotatoServer
             return services;
         }
 
-        public static IServiceCollection SetupMvc(this IServiceCollection services)
+        public static IServiceCollection SetupIdentity<TUser, TDbContext>(this IServiceCollection services, IConfiguration configuration)
+            where TUser : IdentityUser
+            where TDbContext : DbContext
         {
-            services.AddMvc(config =>
-            {
-                config.Filters.Add(new HandleExceptionFilterAttribute());
-            })
-            .AddDataAnnotationsLocalization(options =>
-            {
-                options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResources));
-            });
-            return services;
-        }
-
-        public static IServiceCollection SetupIdentity(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddIdentity<User, IdentityRole>(o =>
+            services.AddIdentity<TUser, IdentityRole>(o =>
             {
                 try
                 {
@@ -67,11 +54,10 @@ namespace PotatoServer
                 {
                     throw new ServerErrorException($"Error during setting password configuration, argument: {ex.Message}");
                 }
-
                 o.User.RequireUniqueEmail = true;
                 o.SignIn.RequireConfirmedEmail = true;
             })
-            .AddEntityFrameworkStores<DatabaseContext>()
+            .AddEntityFrameworkStores<TDbContext>()
             .AddDefaultTokenProviders();
 
             return services;
@@ -110,7 +96,17 @@ namespace PotatoServer
             return services;
         }
 
-        public static IServiceCollection SetupHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        internal static IServiceCollection SetupMvc(this IServiceCollection services)
+        {
+            services.AddMvc()
+            .AddDataAnnotationsLocalization(options =>
+            {
+                options.DataAnnotationLocalizerProvider = (type, factory) => factory.Create(typeof(SharedResources));
+            });
+            return services;
+        }
+
+        internal static IServiceCollection SetupSqlHealthCheck(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHealthChecks()
                 .AddCheck("SQL Database Check", () =>
@@ -122,7 +118,7 @@ namespace PotatoServer
                             conn.Open();
                             return HealthCheckResult.Healthy();
                         }
-                        catch (SqlException)
+                        catch (Exception)
                         {
                             return HealthCheckResult.Unhealthy();
                         }

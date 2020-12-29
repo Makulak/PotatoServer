@@ -6,7 +6,7 @@ namespace PotatoServer.Filters.HandleException
     {
         public HandleExceptionFilterAttribute() : base(typeof(HandleExceptionAttribute))
         {
-            Order = -11000;
+            //Order = -11000;
         }
     }
 }

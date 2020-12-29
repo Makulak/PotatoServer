@@ -1,5 +1,4 @@
-﻿
-namespace PotatoServer
+﻿namespace PotatoServer
 {
     public class SharedResources
     {

@@ -4,7 +4,7 @@ using PotatoServer.Filters.ExceptionHandler;
 
 namespace PotatoServer.Filters.HandleException
 {
-    public class HandleExceptionAttribute : ActionFilterAttribute
+    public class HandleExceptionAttribute : ExceptionFilterAttribute
     {
         private IExceptionHandler _exceptionHandler;
 
@@ -13,10 +13,10 @@ namespace PotatoServer.Filters.HandleException
             _exceptionHandler = exceptionHandler;
         }
 
-        public override void OnActionExecuted(ActionExecutedContext context)
+        public override void OnException(ExceptionContext context)
         {
             var exceptionData = _exceptionHandler.Handle(context.Exception);
-            
+
             if (exceptionData != null)
             {
                 context.Result = new ObjectResult(new { message = exceptionData.Message })
@@ -25,7 +25,7 @@ namespace PotatoServer.Filters.HandleException
                 };
                 context.ExceptionHandled = true;
             }
-            base.OnActionExecuted(context);
+            base.OnException(context);
         }
     }
 }

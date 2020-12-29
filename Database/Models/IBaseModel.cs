@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PotatoServer.Database.Models.Core
+namespace PotatoServer.Database.Models
 {
-    public interface IBaseModel
+    interface IBaseModel
     {
         public int Id { get; set; }
         public DateTime? Created { get; set; }

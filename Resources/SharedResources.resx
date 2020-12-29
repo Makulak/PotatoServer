@@ -120,32 +120,8 @@
   <data name="Annotation_NotSupportedObjectType" xml:space="preserve">
     <value>Typ {0} nie jest obsługiwany.</value>
   </data>
-  <data name="Annotation_Required_Definition" xml:space="preserve">
-    <value>Definicja jest wymagana.</value>
-  </data>
-  <data name="Annotation_Required_Description" xml:space="preserve">
-    <value>Opis jest wymagany.</value>
-  </data>
-  <data name="Annotation_Required_Id" xml:space="preserve">
-    <value>Id jest wymagane.</value>
-  </data>
-  <data name="Annotation_Required_Name" xml:space="preserve">
-    <value>Nazwa jest wymagana.</value>
-  </data>
   <data name="Annotation_ValueMustBeMinimum" xml:space="preserve">
     <value>Wartość dla parametru {0} musi wynosić co najmniej {1}.</value>
-  </data>
-  <data name="BadRequest_IdsDoNotMatch" xml:space="preserve">
-    <value>Id obiektu i ścieżki nie jest zgodne.</value>
-  </data>
-  <data name="NotFound_Category" xml:space="preserve">
-    <value>Nie znaleziono kategorii o id {0}.</value>
-  </data>
-  <data name="NotFound_Position" xml:space="preserve">
-    <value>Nie znaleziono pozycji o id {0}.</value>
-  </data>
-  <data name="NotFound_Word" xml:space="preserve">
-    <value>Nie znaleziono słowa o id {0}.</value>
   </data>
   <data name="WrongEmailOrPassword" xml:space="preserve">
     <value>Email lub hasło jest nieprawidłowe.</value>

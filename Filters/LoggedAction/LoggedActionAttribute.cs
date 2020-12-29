@@ -2,29 +2,37 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PotatoServer.Filters.ExceptionHandler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 
 namespace PotatoServer.Filters.LoggedAction
 {
-
     public class LoggedActionAttribute : ActionFilterAttribute
     {
         private IExceptionHandler _exceptionHandler;
+        private ILogger<LoggedActionAttribute> _logger;
+        private Stopwatch _stopwatch;
 
         public bool SaveResponse { get; set; } = true;
         public bool SaveArguments { get; set; } = true;
 
-        public LoggedActionAttribute(DefaultExceptionHandler exceptionHandler)
+        public LoggedActionAttribute(DefaultExceptionHandler exceptionHandler,
+            ILogger<LoggedActionAttribute> logger)
         {
             _exceptionHandler = exceptionHandler;
+            _logger = logger;
+            _stopwatch = new Stopwatch();
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            _stopwatch.Start();
+
             var actionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
             var httpContext = (DefaultHttpContext)context.HttpContext;
             var identity = (ClaimsIdentity)httpContext.User.Identity;
@@ -42,6 +50,8 @@ namespace PotatoServer.Filters.LoggedAction
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
+            _stopwatch.Stop();
+
             int? responseCode = null;
             string responseValue = string.Empty;
 
