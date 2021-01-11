@@ -22,8 +22,8 @@ namespace PotatoServer
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    addresses.Select(address => builder.WithOrigins(address));
                     builder
+                    .WithOrigins(addresses)
                     .AllowCredentials()
                     .AllowAnyHeader()
                     .AllowAnyMethod();

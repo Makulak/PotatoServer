@@ -15,7 +15,7 @@ namespace PotatoServer
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public virtual IConfiguration Configuration { get; }
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
@@ -37,11 +37,7 @@ namespace PotatoServer
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
-            app.UseCors();
             app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

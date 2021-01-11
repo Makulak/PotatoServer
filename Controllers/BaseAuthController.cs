@@ -16,13 +16,13 @@ namespace PotatoServer.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class UsersController<TUser> : Controller where TUser : IdentityUser, new()
+    public class BaseAuthController<TUser> : Controller where TUser : IdentityUser, new()
     {
         private UserManager<TUser> _userManager;
         private IStringLocalizer<SharedResources> _localizer;
         private IConfiguration _configuration;
 
-        public UsersController(UserManager<TUser> userManager,
+        public BaseAuthController(UserManager<TUser> userManager,
             IStringLocalizer<SharedResources> localizer,
             IConfiguration configuration)
         {
@@ -31,7 +31,7 @@ namespace PotatoServer.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("signin")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> Login([FromBody] UserLoginVm userVm)
         {
             var user = await _userManager.FindByEmailAsync(userVm.Email);
@@ -64,7 +64,7 @@ namespace PotatoServer.Controllers
             throw new BadRequestException(_localizer.GetString("WrongEmailOrPassword"));
         }
 
-        [HttpPost("signup")]
+        [HttpPost("sign-up")]
         public async Task<IActionResult> Register([FromBody] UserRegisterVm userVm)
         {
             var user = new TUser
