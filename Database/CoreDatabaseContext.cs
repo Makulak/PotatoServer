@@ -5,13 +5,14 @@ using System.Linq;
 using System;
 using PotatoServer.Database.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace PotatoServer.Database
 {
-    public class CoreDatabaseContext : IdentityDbContext<User>
+    public class CoreDatabaseContext<TUser> : IdentityDbContext<TUser> where TUser : IdentityUser, new()
     {
         public CoreDatabaseContext() { }
-        public CoreDatabaseContext(DbContextOptions<CoreDatabaseContext> options) : base(options) { }
+        public CoreDatabaseContext(DbContextOptions<CoreDatabaseContext<TUser>> options) : base(options) { }
         protected CoreDatabaseContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
