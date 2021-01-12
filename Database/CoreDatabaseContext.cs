@@ -53,15 +53,21 @@ namespace PotatoServer.Database
         private void SetModifiedDateTime()
         {
             var modified = ChangeTracker.Entries<IBaseModel>()
-                            .Where(e => e.State == EntityState.Modified)
+                            .Where(e => e.State == EntityState.Modified || e.State == EntityState.Added)
                             .ToList();
 
             modified.ForEach(e =>
             {
-                e.Property(x => x.Changed).CurrentValue = DateTime.Now;
-                e.Property(x => x.Changed).IsModified = true;
-
-                e.Property(x => x.Created).IsModified = false;
+                if (e.State == EntityState.Modified)
+                {
+                    e.Property(x => x.Changed).CurrentValue = DateTime.Now;
+                    e.Property(x => x.Changed).IsModified = true;
+                }
+                else if(e.State == EntityState.Added)
+                {
+                    e.Property(x => x.Created).CurrentValue = DateTime.Now;
+                    e.Property(x => x.Created).IsModified = true;
+                }
             });
         }
     }
