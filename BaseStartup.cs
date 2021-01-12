@@ -30,6 +30,12 @@ namespace PotatoServer
             services.SetupSqlHealthCheck(Configuration);
             services.AddTransient<DefaultExceptionHandler>();
             services.AddTransient<HideExceptionHandler>();
+
+            if (Configuration["IsDevelopement"] == "True")
+                services.AddTransient<IExceptionHandler, DefaultExceptionHandler>();
+            else
+                services.AddTransient<IExceptionHandler, HideExceptionHandler>();
+
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)

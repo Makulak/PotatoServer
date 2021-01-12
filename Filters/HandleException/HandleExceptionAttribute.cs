@@ -8,7 +8,7 @@ namespace PotatoServer.Filters.HandleException
     {
         private IExceptionHandler _exceptionHandler;
 
-        public HandleExceptionAttribute(HideExceptionHandler exceptionHandler)
+        public HandleExceptionAttribute(IExceptionHandler exceptionHandler)
         {
             _exceptionHandler = exceptionHandler;
         }
@@ -19,7 +19,7 @@ namespace PotatoServer.Filters.HandleException
 
             if (exceptionData != null)
             {
-                context.Result = new ObjectResult(new { message = exceptionData.Message })
+                context.Result = new ObjectResult(new { message = exceptionData.Message, exception = exceptionData.InnerException })
                 {
                     StatusCode = exceptionData.StatusCode
                 };
