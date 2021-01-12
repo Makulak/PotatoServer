@@ -1,5 +1,5 @@
 ﻿using PotatoServer.Exceptions;
-using PotatoServer.Helpers;
+using PotatoServer.Helpers.Extensions;
 using System;
 
 namespace PotatoServer.Filters.ExceptionHandler

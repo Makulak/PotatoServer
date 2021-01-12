@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PotatoServer.Helpers
+namespace PotatoServer.Helpers.Extensions
 {
     public static class ExceptionExtensions
     {

@@ -2,7 +2,7 @@
 
 namespace PotatoServer.Database.Models
 {
-    interface IBaseModel
+    public interface IBaseModel
     {
         public int Id { get; set; }
         public DateTime? Created { get; set; }

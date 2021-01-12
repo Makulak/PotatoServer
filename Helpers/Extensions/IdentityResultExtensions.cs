@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Linq;
 
-namespace PotatoServer.Helpers
+namespace PotatoServer.Helpers.Extensions
 {
     public static class IdentityResultExtensions
     {

@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using PotatoServer.Exceptions;
 using System.Security.Claims;
 using PotatoServer.ViewModels.Core.User;
-using PotatoServer.Helpers;
+using PotatoServer.Helpers.Extensions;
 
 namespace PotatoServer.Controllers
 {
