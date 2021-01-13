@@ -85,7 +85,7 @@ namespace PotatoServer
 
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrEmpty(accessToken) &&
-                            (path.StartsWithSegments("/hub")))
+                            (path.StartsWithSegments("/hubs")))
                         {
                             context.Token = accessToken;
                         }
