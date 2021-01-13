@@ -17,6 +17,8 @@ namespace PotatoServer
 
         public virtual IConfiguration Configuration { get; }
 
+        public bool IsDevelopement => Configuration["IsDevelopement"] == "True";
+
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
@@ -31,7 +33,7 @@ namespace PotatoServer
             services.AddTransient<DefaultExceptionHandler>();
             services.AddTransient<HideExceptionHandler>();
 
-            if (Configuration["IsDevelopement"] == "True")
+            if (IsDevelopement)
                 services.AddTransient<IExceptionHandler, DefaultExceptionHandler>();
             else
                 services.AddTransient<IExceptionHandler, HideExceptionHandler>();

@@ -4,8 +4,9 @@ namespace PotatoServer.Database.Models
 {
     public interface IBaseModel
     {
-        public int Id { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Changed { get; set; }
+        int Id { get; set; }
+        DateTime? Created { get; set; }
+        DateTime? Changed { get; set; }
+        bool IsDeleted { get; set; }
     }
 }
