@@ -42,8 +42,6 @@ namespace PotatoServer.Controllers
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.UniqueName, user.Email),
-                    new Claim(JwtRegisteredClaimNames.NameId, user.Email),
                     new Claim("UserId", user.Id)
                 };
 
