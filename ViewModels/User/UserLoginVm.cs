@@ -9,6 +9,7 @@ namespace PotatoServer.ViewModels.Core.User
         public string Email { get; set; }
 
         [Required]
+        [MaxLength(32)]
         public string Password { get; set; }
     }
 }

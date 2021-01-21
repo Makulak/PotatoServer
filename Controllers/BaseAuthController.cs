@@ -32,7 +32,7 @@ namespace PotatoServer.Controllers
         }
 
         [HttpPost("sign-in")]
-        public async Task<IActionResult> Login([FromBody] UserLoginVm userVm)
+        public async virtual Task<IActionResult> Login([FromBody] UserLoginVm userVm)
         {
             var user = await _userManager.FindByEmailAsync(userVm.Email);
 
@@ -64,7 +64,7 @@ namespace PotatoServer.Controllers
         }
 
         [HttpPost("sign-up")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterVm userVm)
+        public async virtual Task<IActionResult> Register([FromBody] UserRegisterVm userVm)
         {
             var user = new TUser
             {
