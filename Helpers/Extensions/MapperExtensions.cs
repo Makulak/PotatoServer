@@ -8,7 +8,7 @@ namespace PotatoServer.Helpers.Extensions
     {
         public static PagedViewModel<TViewModel> MapPagedViewModel<TModel, TViewModel>(this IMapper mapper, PagedViewModel<TModel> pagedModel)
         {
-            return new PagedViewModel<TViewModel>(mapper.Map<List<TModel>, List<TViewModel>>(pagedModel.Items), pagedModel.TotalItemsCount)
+            return new PagedViewModel<TViewModel>(mapper.Map<List<TModel>, List<TViewModel>>(pagedModel.Items), pagedModel.TotalItemsCount);
         }
     }
 }
