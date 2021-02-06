@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PotatoServer.Exceptions;
 using PotatoServer.ViewModels.Core;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +8,7 @@ namespace PotatoServer.Helpers.Extensions
 {
     public static class IQueryableExtensions
     {
-        public static async Task<PagedViewModel<TViewModel>> GetPagedAsync<TModel, TViewModel>(this IQueryable<TModel> query, IMapper mapper, int? skip, int? take)
+        public static async Task<PagedViewModel<T>> GetPagedAsync<T>(this IQueryable<T> query, int? skip, int? take)
         {
             if (skip < 0)
                 throw new BadRequestException("Skip < 0"); // TODO: Message
@@ -26,7 +24,7 @@ namespace PotatoServer.Helpers.Extensions
 
             var items = await query.ToListAsync();
 
-            return new PagedViewModel<TViewModel>(mapper.Map<List<TModel>, List<TViewModel>>(items), itemsCount);
+            return new PagedViewModel<T>(items, itemsCount);
         }
     }
 }
