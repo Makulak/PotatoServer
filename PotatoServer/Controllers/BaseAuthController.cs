@@ -11,6 +11,7 @@ using PotatoServer.Exceptions;
 using System.Security.Claims;
 using PotatoServer.ViewModels.Core.User;
 using PotatoServer.Helpers.Extensions;
+using PotatoServer.ViewModels;
 
 namespace PotatoServer.Controllers
 {
@@ -54,7 +55,7 @@ namespace PotatoServer.Controllers
                     claims: claims,
                     signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256));
 
-                return Ok(new
+                return Ok(new TokenViewModel
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     Expires = token.ValidTo
