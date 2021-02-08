@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ListNestTests
+namespace PotatoServerTests
 {
     internal class TestExecutionException : Exception
     {

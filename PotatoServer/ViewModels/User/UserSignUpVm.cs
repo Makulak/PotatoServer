@@ -2,7 +2,7 @@
 
 namespace PotatoServer.ViewModels.Core.User
 {
-    public class UserRegisterVm
+    public class UserSignUpVm
     {
         [Required]
         [EmailAddress]

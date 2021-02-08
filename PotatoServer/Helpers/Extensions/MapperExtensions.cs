@@ -6,9 +6,9 @@ namespace PotatoServer.Helpers.Extensions
 {
     public static class MapperExtensions
     {
-        public static PagedViewModel<TViewModel> MapPagedViewModel<TModel, TViewModel>(this IMapper mapper, PagedViewModel<TModel> pagedModel)
+        public static PagedVmResult<TViewModel> MapPagedViewModel<TModel, TViewModel>(this IMapper mapper, PagedVmResult<TModel> pagedModel)
         {
-            return new PagedViewModel<TViewModel>(mapper.Map<List<TModel>, List<TViewModel>>(pagedModel.Items), pagedModel.TotalItemsCount);
+            return new PagedVmResult<TViewModel>(mapper.Map<List<TModel>, List<TViewModel>>(pagedModel.Items), pagedModel.TotalItemsCount);
         }
     }
 }

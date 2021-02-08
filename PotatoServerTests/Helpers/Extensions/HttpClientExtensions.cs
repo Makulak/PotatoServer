@@ -1,4 +1,4 @@
-﻿using ListNestTests.Models;
+﻿using PotatoServerTests.Models;
 using Newtonsoft.Json;
 using PotatoServer.ViewModels;
 using PotatoServer.ViewModels.Core.User;
@@ -7,19 +7,19 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ListNestTests.Helpers.Extensions
+namespace PotatoServerTests.Helpers.Extensions
 {
     public static class HttpClientExtensions
     {
         public async static Task<string> GetUserTokenAsync(this HttpClient client, string email, string password)
         {
-            var loginVm = new UserLoginVm
+            var loginVm = new UserSignInVm
             {
                 Email = email,
                 Password = password
             };
 
-            var response = await client.DoPostAsync<TokenViewModel>("api/auth/sign-in", loginVm);
+            var response = await client.DoPostAsync<TokenVmResult>("api/auth/sign-in", loginVm);
 
             if (response.IsSuccessStatusCode)
                 return response.Value.Token;

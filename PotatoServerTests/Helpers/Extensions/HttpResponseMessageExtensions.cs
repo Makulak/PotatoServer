@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ListNestTests.Helpers.Extensions
+namespace PotatoServerTests.Helpers.Extensions
 {
     public static class HttpResponseMessageExtensions
     {
@@ -15,7 +15,7 @@ namespace ListNestTests.Helpers.Extensions
             }
             catch (JsonReaderException ex)
             {
-                throw new TestExecutionException($"{responseString}' cannot be deserialized.", ex);
+                throw new TestExecutionException($"{responseString}' cannot be deserialized to type {typeof(T)}.", ex);
             }
         }
     }

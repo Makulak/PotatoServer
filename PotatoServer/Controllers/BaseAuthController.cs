@@ -33,7 +33,7 @@ namespace PotatoServer.Controllers
         }
 
         [HttpPost("sign-in")]
-        public async virtual Task<IActionResult> Login([FromBody] UserLoginVm userVm)
+        public async virtual Task<IActionResult> SignIn([FromBody] UserSignInVm userVm)
         {
             var user = await _userManager.FindByEmailAsync(userVm.Email);
 
@@ -55,7 +55,7 @@ namespace PotatoServer.Controllers
                     claims: claims,
                     signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256));
 
-                return Ok(new TokenViewModel
+                return Ok(new TokenVmResult
                 {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     Expires = token.ValidTo
@@ -65,7 +65,7 @@ namespace PotatoServer.Controllers
         }
 
         [HttpPost("sign-up")]
-        public async virtual Task<IActionResult> Register([FromBody] UserRegisterVm userVm)
+        public async virtual Task<IActionResult> SignUp([FromBody] UserSignUpVm userVm)
         {
             var user = new TUser
             {

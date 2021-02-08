@@ -2,9 +2,9 @@
 
 namespace PotatoServer.ViewModels.Core
 {
-    public class PagedViewModel<T>
+    public class PagedVmResult<T>
     {
-        public PagedViewModel(List<T> items, int totalItemsCount)
+        public PagedVmResult(List<T> items, int totalItemsCount)
         {
             Items = items;
             TotalItemsCount = totalItemsCount;

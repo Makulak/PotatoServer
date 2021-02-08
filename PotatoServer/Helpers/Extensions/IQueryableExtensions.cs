@@ -8,7 +8,7 @@ namespace PotatoServer.Helpers.Extensions
 {
     public static class IQueryableExtensions
     {
-        public static async Task<PagedViewModel<T>> GetPagedAsync<T>(this IQueryable<T> query, int? skip, int? take)
+        public static async Task<PagedVmResult<T>> GetPagedAsync<T>(this IQueryable<T> query, int? skip, int? take)
         {
             if (skip < 0)
                 throw new BadRequestException("Skip < 0"); // TODO: Message
@@ -24,7 +24,7 @@ namespace PotatoServer.Helpers.Extensions
 
             var items = await query.ToListAsync();
 
-            return new PagedViewModel<T>(items, itemsCount);
+            return new PagedVmResult<T>(items, itemsCount);
         }
     }
 }
