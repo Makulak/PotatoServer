@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PotatoServerTests
+namespace PotatoServerTestsCore
 {
     internal class TestExecutionException : Exception
     {

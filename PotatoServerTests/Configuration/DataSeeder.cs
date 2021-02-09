@@ -1,4 +1,4 @@
-﻿namespace PotatoServerTests.Configuration
+﻿namespace PotatoServerTestsCore.Configuration
 {
     internal class DataSeeder
     {

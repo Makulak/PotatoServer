@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using PotatoServer;
 
-namespace PotatoServerTests.Helpers.Builders
+namespace PotatoServerTestsCore.Helpers.Builders
 {
     internal class PotatoAppBuilder : AppBuilder<BaseStartup, TestDbContext>
     {

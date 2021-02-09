@@ -57,6 +57,7 @@ namespace PotatoServer
                 o.User.RequireUniqueEmail = true;
                 o.SignIn.RequireConfirmedEmail = true;
             })
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<TDbContext>()
             .AddDefaultTokenProviders();
 

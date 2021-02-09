@@ -1,4 +1,4 @@
-﻿using PotatoServerTests.Models;
+﻿using PotatoServerTestsCore.Models;
 using Newtonsoft.Json;
 using PotatoServer.ViewModels;
 using PotatoServer.ViewModels.Core.User;
@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PotatoServerTests.Helpers.Extensions
+namespace PotatoServerTestsCore.Helpers.Extensions
 {
     public static class HttpClientExtensions
     {

@@ -1,8 +1,9 @@
-﻿using PotatoServerTests.Configuration;
-using PotatoServerTests.Helpers.Builders;
+﻿using PotatoServerTestsCore.Configuration;
+using PotatoServerTestsCore.Helpers.Builders;
+using PotatoServerTestsCore.Helpers.Extensions;
 using Xunit;
 
-namespace PotatoServerTests.Tests
+namespace PotatoServerTestsCore.Tests
 {
     public class SignInTests : IClassFixture<PotatoWebApplicationFactory>
     {
@@ -14,11 +15,14 @@ namespace PotatoServerTests.Tests
         }
 
         [Fact]
-        public void GetLists_Should_ReturnUnauthorized_When_UserIsNotLoggedIn()
+        public async void SignIn_Should_ReturnUnauthorized_When_UserIsNotLoggedIn()
         {
             var address = "api/auth";
             var client = new PotatoAppBuilder(_factory)
                         .CreateClient();
+
+            var response = await client.GetUserTokenAsync("admin@admin.com", "Admin");
+
         }
     }
 }

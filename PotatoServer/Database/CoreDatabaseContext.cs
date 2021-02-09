@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace PotatoServer.Database
 {
-    public class CoreDatabaseContext<TUser> : IdentityDbContext<TUser> where TUser : IdentityUser, new()
+    public abstract class CoreDatabaseContext<TUser> : IdentityDbContext<TUser> where TUser : IdentityUser, new()
     {
         public CoreDatabaseContext() { }
         public CoreDatabaseContext(DbContextOptions<CoreDatabaseContext<TUser>> options) : base(options) { }
@@ -17,7 +17,7 @@ namespace PotatoServer.Database
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new UserConfiguration());
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" });
 
             base.OnModelCreating(builder);
         }
