@@ -1,6 +1,6 @@
-﻿using PotatoServerTestsCore.Configuration;
+﻿using PotatoServerTests.Extensions;
+using PotatoServerTestsCore.Configuration;
 using PotatoServerTestsCore.Helpers.Builders;
-using PotatoServerTestsCore.Helpers.Extensions;
 using Xunit;
 
 namespace PotatoServerTestsCore.Tests
@@ -22,7 +22,6 @@ namespace PotatoServerTestsCore.Tests
                         .CreateClient();
 
             var response = await client.GetUserTokenAsync("admin@admin.com", "Admin");
-
         }
     }
 }

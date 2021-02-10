@@ -2,7 +2,7 @@
 
 namespace PotatoServerTestsCore
 {
-    internal class TestExecutionException : Exception
+    public class TestExecutionException : Exception
     {
         public TestExecutionException()
         {

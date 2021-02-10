@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PotatoServerTests.Core\PotatoServerTests.Core.csproj" />
     <ProjectReference Include="..\PotatoServer\PotatoServer.csproj" />
   </ItemGroup>
 
