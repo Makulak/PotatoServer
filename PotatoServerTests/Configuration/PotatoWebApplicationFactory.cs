@@ -15,7 +15,6 @@ namespace PotatoServerTestsCore.Configuration
             builder.ConfigureServices(services =>
             {
                 // Configure only things, that must be the same in all tests
-                services.AddTransient<DataSeeder>();
             });
             builder.Configure(config =>
             {

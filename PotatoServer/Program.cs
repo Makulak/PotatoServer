@@ -14,7 +14,7 @@ namespace PotatoServer
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<BaseStartup>();
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

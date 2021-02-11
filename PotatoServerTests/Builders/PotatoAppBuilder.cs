@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using PotatoServerTests;
+using PotatoServer;
 
 namespace PotatoServerTestsCore.Helpers.Builders
 {

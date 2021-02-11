@@ -1,28 +1,27 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PotatoServer.Exceptions;
+using PotatoServer.Helpers.Extensions;
 
 namespace PotatoServer.Database
 {
     public class DatabaseSeeder
     {
-        public static async void AddAdmin<T>(UserManager<T> userManager) where T : IdentityUser, new()
+        public static async void AddAdmin<T>(UserManager<T> userManager, string email, string userName, string password) where T : IdentityUser, new()
         {
-            string adminEmail = "admin@admin.com";
-            string adminPassword = "Admin";
-            if (userManager.FindByEmailAsync(adminEmail).Result == null)
+            if (userManager.FindByEmailAsync(email).Result == null)
             {
                 T user = new T
                 {
-                    UserName = adminEmail,
-                    Email = adminEmail
+                    UserName = userName,
+                    Email = email
                 };
 
-                IdentityResult result = await userManager.CreateAsync(user, adminPassword);
+                IdentityResult result = await userManager.CreateAsync(user, password);
 
                 if (result.Succeeded)
                     userManager.AddToRoleAsync(user, "Admin").Wait();
                 else
-                    throw new ServerErrorException("Cannot create default admin"); // TODO: Message
+                    throw new ServerErrorException($"Cannot create default admin: \r\n {result.GetErrorString()}");
             }
         }
     }

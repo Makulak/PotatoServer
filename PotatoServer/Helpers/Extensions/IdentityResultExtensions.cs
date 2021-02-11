@@ -7,7 +7,7 @@ namespace PotatoServer.Helpers.Extensions
     {
         public static string GetErrorString(this IdentityResult identityResult)
         {
-            return string.Concat(identityResult.Errors.Select(e => e.Description));
+            return string.Concat(identityResult.Errors.Select(error => $"{error.Code} - {error.Description}\r\n"));
         }
     }
 }

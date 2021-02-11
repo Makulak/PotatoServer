@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace PotatoServer.Database
 {
-    public abstract class CoreDatabaseContext<TUser> : IdentityDbContext<TUser> where TUser : IdentityUser, new()
+    public abstract class BaseDbContext<TUser> : IdentityDbContext<TUser> where TUser : IdentityUser, new()
     {
-        public CoreDatabaseContext() { }
-        public CoreDatabaseContext(DbContextOptions<CoreDatabaseContext<TUser>> options) : base(options) { }
-        protected CoreDatabaseContext(DbContextOptions options) : base(options) { }
+        public BaseDbContext() { }
+        public BaseDbContext(DbContextOptions<BaseDbContext<TUser>> options) : base(options) { }
+        protected BaseDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

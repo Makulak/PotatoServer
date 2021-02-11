@@ -15,7 +15,6 @@ using PotatoServer.ViewModels;
 
 namespace PotatoServer.Controllers
 {
-    [Route("api/auth")]
     [ApiController]
     public class BaseAuthController<TUser> : Controller where TUser : IdentityUser, new()
     {

@@ -8,7 +8,7 @@ using PotatoServer.Filters.ExceptionHandler;
 
 namespace PotatoServer
 {
-    public class BaseStartup
+    public abstract class BaseStartup
     {
         public BaseStartup(IConfiguration configuration)
         {
@@ -25,9 +25,6 @@ namespace PotatoServer
                 .AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.SetupMvc();
-
-            //services.SetupIdentity<User, CoreDatabaseContext>(Configuration);
-            //services.AddDbContext<CoreDatabaseContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.SetupSqlHealthCheck(Configuration);
             services.AddTransient<DefaultExceptionHandler>();

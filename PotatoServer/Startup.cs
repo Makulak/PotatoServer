@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PotatoServer;
+using PotatoServer.Database;
 using PotatoServer.Database.Models;
-using PotatoServerTestsCore;
 
-namespace PotatoServerTests
+namespace PotatoServer
 {
-    public class Startup : BaseStartup
+    internal class Startup : BaseStartup
     {
         public override IConfiguration Configuration { get; }
 
@@ -18,16 +17,14 @@ namespace PotatoServerTests
             Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.SetupIdentity<User, TestDbContext>(Configuration);
-            services.AddDbContext<TestDbContext>(o => o.UseSqlite("Data Source=:memory:"));
+            services.SetupIdentity<User, PotatoDbContext>(Configuration);
+            services.AddDbContext<PotatoDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             base.ConfigureServices(services);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             base.Configure(app, env);
