@@ -12,8 +12,7 @@ PotatoServer is simple .NET 5.0 foundament for building ASP.NET Applications
 - Easy configuration
 
 ## Startup
-- Create new <YourProject> and add reference to PotatoServer
-- Set <YourProject> as startup
+- Create new project and add reference to PotatoServer
 - Set configuration in `appsettings.json` (more in **Configuration** section)
 - Extend `BaseStartup` in `Startup` class
 ```
@@ -92,6 +91,7 @@ PotatoServer provides few default exceptions, that can be used to return specifi
 | ServerErrorException | 500 | |
 | NotFoundException | 404 | |
 | BadRequestException | 400 | |
+
 All other exceptions are handled as HTTP 500 and sends default *"Internal Server Error"* message to client.
 You can add new exceptions by extending `PotatoServerException`.
 
@@ -122,10 +122,11 @@ services.AddSignalR(hubOptions =>
 ### Extensions
 #### GetPagedAsync
 `Task<PagedVmResult<T>> IQueryable.GetPagedAsync<T>(int? skip, int? take)`
-`PagedVmResult`
+
 ####  MapPagedViewModel
 `PagedVmResult<TViewModel> IMapper.MapPagedViewModel<TModel, TViewModel>(PagedVmResult<TModel> pagedModel)`
 #### Usage
+MapPagedViewModel reuires specyfying AutoMapper maping.
 ```
 public async Task<ActionResult> GetSomePagedDataAsync(int skip, int take)
 {
