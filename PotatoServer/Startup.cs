@@ -8,7 +8,7 @@ using PotatoServer.Database.Models;
 
 namespace PotatoServer
 {
-    internal class Startup : BaseStartup
+    public class Startup : BaseStartup
     {
         public override IConfiguration Configuration { get; }
 

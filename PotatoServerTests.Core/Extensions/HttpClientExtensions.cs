@@ -14,7 +14,9 @@ namespace PotatoServerTestsCore.Helpers.Extensions
             if (token != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            return new ApiResponse<T>(await client.GetAsync(url));
+            var x = await client.GetAsync(url);
+
+            return new ApiResponse<T>(x);
         }
 
         public async static Task<ApiResponse<T>> DoPostAsync<T>(this HttpClient client, string url, object obj, string token = null)

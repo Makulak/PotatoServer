@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using PotatoServer.Exceptions;
 using PotatoServer.Filters.HandleException;
 using PotatoServer.Filters.LoggedAction;
+using PotatoServer.ViewModels;
 
 namespace PotatoServer.Controllers
 {
@@ -22,7 +23,7 @@ namespace PotatoServer.Controllers
         [HttpGet("server-settings")]
         public async Task<ActionResult> GetServerSettings()
         {
-            return await Task.FromResult(Ok(new
+            return await Task.FromResult(Ok(new ServerSettingsVmResult
             {
                 RequiredLength = int.Parse(_configuration["Password:RequiredLength"]),
                 RequireDigit = bool.Parse(_configuration["Password:RequireDigit"]),

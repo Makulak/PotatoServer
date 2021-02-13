@@ -16,6 +16,7 @@ namespace PotatoServerTestsCore.Models
         public ApiResponse(HttpResponseMessage response)
         {
             IsSuccessStatusCode = response.IsSuccessStatusCode;
+            StatusCode = response.StatusCode;
 
             var bodyString = response.Content.ReadAsStringAsync();
             bodyString.Wait();

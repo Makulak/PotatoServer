@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PotatoServer.Database.Models;
-using PotatoServerTests;
-using System;
+using PotatoServer;
+using PotatoServer.Database;
+using System.Linq;
 
 namespace PotatoServerTestsCore.Configuration
 {
@@ -15,13 +15,18 @@ namespace PotatoServerTestsCore.Configuration
             builder.ConfigureServices(services =>
             {
                 // Configure only things, that must be the same in all tests
+                var dbContext = services.SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<PotatoDbContext>));
+                
+                if (dbContext != null)
+                    services.Remove(dbContext);
+
+                // This method adds AuthController from tests
+                //services
+                //.AddControllers()
+                //.AddApplicationPart(typeof(Startup).Assembly);
             });
             builder.Configure(config =>
             {
-                var userManager = config.ApplicationServices.GetService(typeof(UserManager<User>)) as UserManager<User>;
-
-                if (userManager == null)
-                    throw new NullReferenceException("UserManager is null"); // TODO: Message
             });
         }
     }

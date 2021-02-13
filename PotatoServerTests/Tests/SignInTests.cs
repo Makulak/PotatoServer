@@ -1,6 +1,7 @@
-﻿using PotatoServerTests.Extensions;
+﻿using PotatoServer.ViewModels;
 using PotatoServerTestsCore.Configuration;
 using PotatoServerTestsCore.Helpers.Builders;
+using PotatoServerTestsCore.Helpers.Extensions;
 using Xunit;
 
 namespace PotatoServerTestsCore.Tests
@@ -15,13 +16,16 @@ namespace PotatoServerTestsCore.Tests
         }
 
         [Fact]
-        public async void SignIn_Should_ReturnUnauthorized_When_UserIsNotLoggedIn()
+        public async void SignIn_Should_SignIn()
         {
-            var address = "api/auth";
+            var address = "api/core/server-settings";
             var client = new PotatoAppBuilder(_factory)
                         .CreateClient();
 
-            var response = await client.GetUserTokenAsync("admin@admin.com", "Admin");
+            //var response = await client.GetUserTokenAsync("admin@admin.com", "Admin");
+            var responseTwo = await client.DoGetAsync<ServerSettingsVmResult>(address);
+
+            Assert.Equal(System.Net.HttpStatusCode.OK, responseTwo.StatusCode);
         }
     }
 }
