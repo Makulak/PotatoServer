@@ -9,13 +9,13 @@ using PotatoServer.Database.Models;
 namespace PotatoServerTests.Configuration
 {
     /// <summary>
-    /// This is only because default BaseAuthController<TUser> is not created by default
+    /// This is only because BaseAuthController<TUser> is not created by default
     /// </summary>
     [ApiController]
     [Route("api/auth")]
-    public class TestAuthController : BaseAuthController<User>
+    public class TestAuthController : BaseAuthController<PotatoUser>
     {
-        public TestAuthController(UserManager<User> userManager, IStringLocalizer<SharedResources> localizer, IConfiguration configuration) : base(userManager, localizer, configuration)
+        public TestAuthController(UserManager<PotatoUser> userManager, IStringLocalizer<SharedResources> localizer, IConfiguration configuration) : base(userManager, localizer, configuration)
         {
         }
     }

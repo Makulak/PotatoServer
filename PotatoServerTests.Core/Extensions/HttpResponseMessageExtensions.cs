@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace PotatoServerTestsCore.Helpers.Extensions
+namespace PotatoServerTestsCore.Extensions
 {
     public static class HttpResponseMessageExtensions
     {

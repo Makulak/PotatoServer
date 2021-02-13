@@ -1,8 +1,7 @@
 ﻿using PotatoServer.ViewModels;
 using PotatoServerTests.Extensions;
 using PotatoServerTestsCore.Configuration;
-using PotatoServerTestsCore.Helpers.Builders;
-using PotatoServerTestsCore.Helpers.Extensions;
+using PotatoServerTestsCore.Extensions;
 using Xunit;
 
 namespace PotatoServerTestsCore.Tests

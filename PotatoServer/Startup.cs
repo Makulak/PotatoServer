@@ -21,7 +21,7 @@ namespace PotatoServer
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.SetupIdentity<User, PotatoDbContext>(Configuration);
+            services.SetupIdentity<PotatoUser, PotatoDbContext>(Configuration);
             services.AddDbContext<PotatoDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             base.ConfigureServices(services);
@@ -29,7 +29,7 @@ namespace PotatoServer
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetService(typeof(UserManager<User>)) as UserManager<User>;
+            var userManager = serviceProvider.GetService(typeof(UserManager<PotatoUser>)) as UserManager<PotatoUser>;
             DatabaseSeeder.AddAdmin(userManager, "admin@admin.pl", "Admin", "Admin");
             base.Configure(app, env, serviceProvider);
         }

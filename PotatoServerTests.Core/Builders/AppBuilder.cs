@@ -7,7 +7,7 @@ using System;
 using System.Data.Common;
 using Microsoft.Data.Sqlite;
 
-namespace PotatoServerTestsCore.Helpers.Builders
+namespace PotatoServerTestsCore.Builders
 {
     public abstract class AppBuilder<TStartup, TContext> : IDisposable
                                                          where TStartup : class

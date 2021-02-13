@@ -2,7 +2,7 @@
 
 namespace PotatoServer.Database.Models
 {
-    public class User : IdentityUser
+    public class PotatoUser : IdentityUser
     {
     }
 }
