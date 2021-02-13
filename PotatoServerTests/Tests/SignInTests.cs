@@ -1,4 +1,5 @@
 ﻿using PotatoServer.ViewModels;
+using PotatoServerTests.Extensions;
 using PotatoServerTestsCore.Configuration;
 using PotatoServerTestsCore.Helpers.Builders;
 using PotatoServerTestsCore.Helpers.Extensions;
@@ -22,7 +23,8 @@ namespace PotatoServerTestsCore.Tests
             var client = new PotatoAppBuilder(_factory)
                         .CreateClient();
 
-            //var response = await client.GetUserTokenAsync("admin@admin.com", "Admin");
+            var response = await client.GetUserTokenAsync("admin@admin.pl","Admin");
+
             var responseTwo = await client.DoGetAsync<ServerSettingsVmResult>(address);
 
             Assert.Equal(System.Net.HttpStatusCode.OK, responseTwo.StatusCode);

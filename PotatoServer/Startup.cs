@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PotatoServer.Database;
 using PotatoServer.Database.Models;
+using System;
 
 namespace PotatoServer
 {
@@ -25,9 +27,11 @@ namespace PotatoServer
             base.ConfigureServices(services);
         }
 
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public override void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-            base.Configure(app, env);
+            var userManager = serviceProvider.GetService(typeof(UserManager<User>)) as UserManager<User>;
+            DatabaseSeeder.AddAdmin(userManager, "admin@admin.pl", "Admin", "Admin");
+            base.Configure(app, env, serviceProvider);
         }
     }
 }

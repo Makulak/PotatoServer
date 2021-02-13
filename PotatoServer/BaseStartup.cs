@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using PotatoServer.Filters.ExceptionHandler;
+using System;
 
 namespace PotatoServer
 {
@@ -36,7 +37,7 @@ namespace PotatoServer
                 services.AddTransient<IExceptionHandler, HideExceptionHandler>();
         }
 
-        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();

@@ -50,7 +50,7 @@ namespace PotatoServer.Controllers
                 var token = new JwtSecurityToken(
                     _configuration["Tokens:Issuer"],
                     _configuration["Tokens:Audience"],
-                    expires: DateTime.UtcNow.AddMinutes(double.Parse(_configuration["Tokens:Expires"])),
+                    expires: DateTime.UtcNow.AddMinutes(double.Parse(_configuration["Tokens:ExpiresMinutes"])),
                     claims: claims,
                     signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha256));
 
