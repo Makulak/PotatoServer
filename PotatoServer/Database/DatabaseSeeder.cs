@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PotatoServer.Exceptions;
 using PotatoServer.Helpers.Extensions;
+using System.Threading.Tasks;
 
 namespace PotatoServer.Database
 {
     public class DatabaseSeeder
     {
-        public static async void AddAdmin<T>(UserManager<T> userManager, string email, string userName, string password) where T : IdentityUser, new()
+        public static async Task AddAdminAsync<T>(UserManager<T> userManager, string email, string userName, string password) where T : IdentityUser, new()
         {
             if (userManager.FindByEmailAsync(email).Result == null)
             {

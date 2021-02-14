@@ -29,8 +29,9 @@ namespace PotatoServer
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-            var userManager = serviceProvider.GetService(typeof(UserManager<PotatoUser>)) as UserManager<PotatoUser>;
-            DatabaseSeeder.AddAdmin(userManager, "admin@admin.pl", "Admin", "Admin");
+            var userManager = serviceProvider.GetService<UserManager<PotatoUser>>();
+            DatabaseSeeder.AddAdminAsync(userManager, "admin@admin.pl", "Admin", "Admin").GetAwaiter().GetResult();
+
             base.Configure(app, env, serviceProvider);
         }
     }

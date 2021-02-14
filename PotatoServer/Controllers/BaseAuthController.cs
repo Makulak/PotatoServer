@@ -12,6 +12,7 @@ using System.Security.Claims;
 using PotatoServer.ViewModels.Core.User;
 using PotatoServer.Helpers.Extensions;
 using PotatoServer.ViewModels;
+using System.Collections.Generic;
 
 namespace PotatoServer.Controllers
 {
@@ -38,12 +39,17 @@ namespace PotatoServer.Controllers
 
             if (user != null && await _userManager.CheckPasswordAsync(user, userVm.Password))
             {
-                var claims = new[]
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                var claims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("UserId", user.Id)
                 };
+                foreach (var userRole in userRoles)
+                    claims.Add(new Claim(ClaimTypes.Role, userRole));
 
                 var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
 
