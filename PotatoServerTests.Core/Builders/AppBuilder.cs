@@ -14,10 +14,11 @@ namespace PotatoServerTestsCore.Builders
                                                          where TContext : DbContext
     {
         private readonly WebApplicationFactory<TStartup> _factory;
-        private readonly IEnumerable<Action> _actions;
         
         private DbConnection _dbConnection;
-        private TContext _dbContext;
+        
+        protected  TContext _dbContext;
+        protected List<Action> _actions;
 
         public AppBuilder(WebApplicationFactory<TStartup> factory)
         {

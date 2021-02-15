@@ -33,5 +33,10 @@ namespace PotatoServerTestsCore.Models
                 IsValueDeserializedProperly = false;
             }
         }
+
+        public override string ToString()
+        {
+            return $"{StatusCode} - {ValueString}";
+        }
     }
 }

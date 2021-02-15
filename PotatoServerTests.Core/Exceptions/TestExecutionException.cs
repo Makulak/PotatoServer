@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace PotatoServerTestsCore
+namespace PotatoServerTestsCore.Exceptions
 {
     public class TestExecutionException : Exception
     {
+        public override string Message => $"\r\n {base.Message}";
         public TestExecutionException()
         {
         }
