@@ -6,24 +6,41 @@ using System.Collections.Generic;
 using System;
 using System.Data.Common;
 using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Identity;
 
 namespace PotatoServerTestsCore.Builders
 {
-    public abstract class AppBuilder<TStartup, TContext> : IDisposable
+    public abstract class AppBuilder<TStartup, TContext, TUser> : IDisposable
                                                          where TStartup : class
                                                          where TContext : DbContext
+                                                         where TUser : IdentityUser
     {
         private readonly WebApplicationFactory<TStartup> _factory;
         
+        private List<Action> _actions;
         private DbConnection _dbConnection;
-        
-        protected  TContext _dbContext;
-        protected List<Action> _actions;
+
+        protected UserManager<TUser> _userManager;
+        protected TContext _dbContext;
 
         public AppBuilder(WebApplicationFactory<TStartup> factory)
         {
             _factory = factory;
             _actions = new List<Action>();
+        }
+
+        protected void AddAction(Action action)
+        {
+            _actions.Add(action);
+        }
+
+        protected void CreateUsers(TUser[] users, string password)
+        {
+            _actions.Add(async () =>
+            {
+                foreach (var user in users)
+                    await _userManager.CreateAsync(user, password);
+            });
         }
 
         public HttpClient CreateClient()
@@ -48,6 +65,7 @@ namespace PotatoServerTestsCore.Builders
                     {
                         var scopedServices = scope.ServiceProvider;
                         _dbContext = scopedServices.GetRequiredService<TContext>();
+                        _userManager = scopedServices.GetRequiredService<UserManager<TUser>>();
 
                         if (_dbContext == null)
                             throw new NullReferenceException("DbContext is null");
