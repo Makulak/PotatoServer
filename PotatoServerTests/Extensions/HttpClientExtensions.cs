@@ -1,6 +1,6 @@
 ﻿using PotatoServer.ViewModels;
 using PotatoServer.ViewModels.Core.User;
-using PotatoServerTestsCore;
+using PotatoServerTestsCore.Exceptions;
 using PotatoServerTestsCore.Extensions;
 using System.Net.Http;
 using System.Threading.Tasks;
